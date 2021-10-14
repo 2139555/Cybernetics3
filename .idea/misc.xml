@@ -28,11 +28,15 @@
         <entry key="app/src/main/res/layout/activity_browse_quiz_questions.xml" value="0.10778985507246377" />
         <entry key="app/src/main/res/layout/activity_course_home_page.xml" value="0.19322916666666667" />
         <entry key="app/src/main/res/layout/activity_course_home_page_instructor.xml" value="0.1671171171171171" />
+        <entry key="app/src/main/res/layout/activity_create_course.xml" value="0.10507246376811594" />
+        <entry key="app/src/main/res/layout/activity_create_lesson.xml" value="0.10507246376811594" />
         <entry key="app/src/main/res/layout/activity_dashboard.xml" value="0.1358695652173913" />
         <entry key="app/src/main/res/layout/activity_forum.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_lesson_page.xml" value="0.1671171171171171" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.13269927536231885" />
+        <entry key="app/src/main/res/layout/add_question_dialog.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/course_card.xml" value="0.18704710144927536" />
+        <entry key="app/src/main/res/layout/create_quiz_dialog.xml" value="0.1793478260869565" />
         <entry key="app/src/main/res/layout/discussion_card.xml" value="0.18" />
         <entry key="app/src/main/res/layout/discussion_dialog.xml" value="0.1671171171171171" />
         <entry key="app/src/main/res/layout/forum_card.xml" value="0.5" />

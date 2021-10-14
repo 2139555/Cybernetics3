@@ -53,6 +53,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         holder.answerOption2.setText(question.getAnswerOption2());
         holder.answerOption3.setText(question.getAnswerOption3());
         holder.answerOption4.setText(question.getAnswerOption4());
+        holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+        String[] questNo = question.getQuestionID().split("-");
+        holder.questionNo.setText("(" + questNo[1] + ")");
         if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
             holder.answerOption1.setChecked(true);
         }
@@ -78,6 +81,8 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         //Views
         public TextView question;
         public RadioGroup rgAnswerOptions;
+        public TextView questionNo;
+        public TextView questionMarks;
         public RadioButton answerOption1;
         public RadioButton answerOption2;
         public RadioButton answerOption3;
@@ -87,6 +92,8 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             question = (TextView) itemView.findViewById(R.id.question);
+            questionNo = (TextView) itemView.findViewById(R.id.questionNO);
+            questionMarks = (TextView) itemView.findViewById(R.id.questionMarks);
             rgAnswerOptions = (RadioGroup) itemView.findViewById(R.id.rgAnswers);
             answerOption1 = (RadioButton) itemView.findViewById(R.id.option1);
             answerOption2 = (RadioButton) itemView.findViewById(R.id.option2);

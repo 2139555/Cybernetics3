@@ -113,7 +113,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         //JsonArrayRequest of volley
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(webURL + String.valueOf(requestCount)+"&quizId="+QUIZ.ID,
                 (response) -> {
-                    //Calling method parseData to parse the json responce
+                    //Calling method parseData to parse the json response
                     try {
                         parseData(response);
                     } catch (JSONException e) {
@@ -167,6 +167,13 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 question.setQuestionText(json.getString("questionText"));
                 question.setQuestionID(json.getString("questionId"));
                 question.setQuestionMarkAlloc(json.getInt("questionMark"));
+
+                question.setAnswerOption1(json.getString("0"));
+                question.setAnswerOption2(json.getString("1"));
+                question.setAnswerOption3(json.getString("2"));
+                question.setAnswerOption4(json.getString("3"));
+
+                question.setCorrectOption(json.getString("4"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -349,7 +356,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         return empty;
     }
 
-    //This method will check if the recyclerview has reached the bottom or not
+    //This me+thod will check if the recyclerview has reached the bottom or not
     public boolean isLastItemDistplaying(RecyclerView recyclerView){
         if(recyclerView.getAdapter().getItemCount() != 0){
             int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();

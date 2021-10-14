@@ -258,27 +258,14 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 isEmpty(answerOption4);
                 isEmpty(markAlloc);
                 if(!isEmpty(question) && !isEmpty(answerOption1)&& !isEmpty(answerOption2)&&!isEmpty(answerOption3)&&!isEmpty(answerOption4) && !isEmpty(markAlloc)){
-                    String correctAns;
                     String quest = question.getEditText().getText().toString();
                     String ans1 = answerOption1.getEditText().getText().toString();
                     String ans2 = answerOption2.getEditText().getText().toString();
                     String ans3 = answerOption3.getEditText().getText().toString();
                     String ans4 = answerOption4.getEditText().getText().toString();
                     String mark = markAlloc.getEditText().getText().toString();
-                    if(correctAnswer==1){
-                        correctAns = ans1;
-                    }
-                    else if(correctAnswer==2){
-                        correctAns = ans2;
-                    }
-                    else if(correctAnswer==3){
-                        correctAns=ans3;
-                    }
-                    else{
-                        correctAns = ans4;
-                    }
                     try {
-                        addQuestion("addQuestion.php",quest,ans1,ans2,ans3,ans4,correctAns,mark);
+                        addQuestion("addQuestion.php",quest,ans1,ans2,ans3,ans4,correctAnswer,mark);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -296,7 +283,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
     }
 
     @Generated
-    private void addQuestion (String phpFile,String question,String answer1,String answer2,String answer3,String answer4, String answerCorrect,String mark) throws IOException {
+    private void addQuestion (String phpFile,String question,String answer1,String answer2,String answer3,String answer4, int answerCorrect,String mark) throws IOException {
         OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + phpFile).newBuilder();
         urlBuilder.addQueryParameter("quizId", Integer.toString(QUIZ.ID));
@@ -306,7 +293,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         urlBuilder.addQueryParameter("option2",answer2);
         urlBuilder.addQueryParameter("option3",answer3);
         urlBuilder.addQueryParameter("option4",answer4);
-        urlBuilder.addQueryParameter("correctAnswer",answerCorrect);
+        urlBuilder.addQueryParameter("correctAnswer",Integer.toString(answerCorrect));
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()

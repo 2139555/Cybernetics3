@@ -123,8 +123,10 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 @Override
                 @Generated
                 public void onClick(View view) {
-
-
+                    QUIZ.ID = Integer.parseInt(quizID.getText().toString());
+                    QUIZ.NAME = quizName.getText().toString();
+                    Intent i = new Intent(context,BrowseQuizQuestions.class);
+                    context.startActivity(i);
                 }
             });
         }

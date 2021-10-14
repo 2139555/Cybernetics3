@@ -17,6 +17,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".BrowseQuizQuestions"
+            android:exported="true" />
+        <activity
             android:name=".EnrolmentRequests"
             android:exported="true" />
         <activity
@@ -54,7 +57,7 @@
         <activity android:name=".MyCourses" />
         <activity android:name=".UserDetails" />
         <activity android:name=".ForumActivity" />
-        <activity android:name=".QuizActivity"/>
+        <activity android:name=".QuizActivity" />
         <activity android:name=".ADiscussion" />
         <activity
             android:name=".RegisterActivity"

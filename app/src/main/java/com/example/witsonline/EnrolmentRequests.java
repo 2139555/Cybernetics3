@@ -40,14 +40,29 @@ public class EnrolmentRequests extends AppCompatActivity implements View.OnScrol
     private RequestQueue requestQueue;
 
     //The request counter to send ?page=1, ?page=2 requests
+    Bundle extras;
     private int courseCount = 1;
+    private boolean browse = false;
+    private boolean mycourses = false;
+    private boolean dashboard = false;
 
     @Override
     @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enrolment_requests);
+        extras = getIntent().getExtras();
+        if (extras != null) {
+            String act = extras.getString("activity");
+            if (act.contains("BrowseCourses")) {
+                browse = true;
+            } else if (act.contains("Dashboard")) {
+                dashboard = true;
 
+            } else {
+                mycourses = true;
+            }
+        }
         //Initializing Views
         recyclerView = (RecyclerView) findViewById(R.id.tutorEnrolmentRequestRecyclerVew);
         recyclerView.setHasFixedSize(true);
@@ -193,6 +208,15 @@ public class EnrolmentRequests extends AppCompatActivity implements View.OnScrol
     @Generated
     public void onBackPressed() {
         Intent intent = new Intent(EnrolmentRequests.this , CourseHomePage.class);
+        if(browse){
+            intent.putExtra("activity",""+BrowseCourses.class);
+        }
+        else if(mycourses){
+            intent.putExtra("activity",""+MyCourses.class);
+        }
+        else{
+            intent.putExtra("activity",""+Dashboard.class);
+        }
         startActivity(intent);
         super.onBackPressed();
     }

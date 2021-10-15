@@ -917,6 +917,15 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
         switch (item.getItemId()){
             case R.id.menu_view_requests:
                 Intent intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
+                if(browse){
+                    intent.putExtra("activity",""+BrowseCourses.class);
+                }
+                else if(mycourses){
+                    intent.putExtra("activity",""+MyCourses.class);
+                }
+                else{
+                    intent.putExtra("activity",""+Dashboard.class);
+                }
                 startActivity(intent);
 
         }

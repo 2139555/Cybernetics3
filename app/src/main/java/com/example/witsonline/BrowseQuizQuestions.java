@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -62,8 +63,15 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
     private TextInputLayout answerOption4;
     private TextInputLayout markAlloc;
     private  Button addQuestion;
+    private ImageView quizEye;
     private Spinner spinner;
     private int correctAnswer;
+
+    //quiz visibility dialog
+    private TextView visibilityText;
+    private Button dialogVisibilityYes;
+    private Button dialogVisibilityNo;
+
     private boolean correctAnswerSelected = false;
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
     String ansURL = "https://lamp.ms.wits.ac.za/home/s2105624/answerFeed.php?page=";
@@ -75,6 +83,10 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         quizName.setText(QUIZ.NAME);
         addQuestion = findViewById(R.id.addQuestion);
         recyclerView = (RecyclerView)findViewById(R.id.questionsRecyclerView);
+        quizEye = findViewById(R.id.editQuizVisibility);
+        if (QUIZ.VISIBILITY == 1){
+            quizEye.setImageResource(R.drawable.ic_baseline_visibility_24);
+        }
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -94,10 +106,18 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         //Adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
+
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 createNewQuestionDialog();
+            }
+        });
+
+        quizEye.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createNewVisibilityDialog();
             }
         });
     }
@@ -327,6 +347,92 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                             Toast toast = Toast.makeText(BrowseQuizQuestions.this, "Couldn't add your question ", Toast.LENGTH_LONG);
                             toast.show();
                         }
+                    }
+                });
+            }
+        });
+    }
+
+    @Generated
+    public void createNewVisibilityDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        final View viewPopUp = LayoutInflater.from(this)
+                .inflate(R.layout.set_quiz_visibility_dialog, null);
+
+        dialogBuilder.setView(viewPopUp);
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+
+
+        visibilityText = viewPopUp.findViewById(R.id.dialog_question_visibility);
+        dialogVisibilityYes = viewPopUp.findViewById(R.id.btn_visibiity_yes);
+        dialogVisibilityNo = viewPopUp.findViewById(R.id.btn_visibility_no);
+
+        if (QUIZ.VISIBILITY==1){
+            visibilityText.setText("Do you want to hide this quiz?");
+        }
+        else{
+            visibilityText.setText("Do you want to publish this quiz?");
+        }
+
+        dialogVisibilityYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @Generated
+            public void onClick(View v) {
+                if (QUIZ.VISIBILITY == 0){
+                    quizEye.setImageResource(R.drawable.ic_baseline_visibility_24);
+                    QUIZ.VISIBILITY = 1;
+                }
+                else{
+                    quizEye.setImageResource(R.drawable.ic_baseline_visibility_off_24);
+                    QUIZ.VISIBILITY =0;
+                }
+                try {
+                    setQuizVisibility("updateQuizVisibility.php");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+            }
+        });
+
+        dialogVisibilityNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Generated
+    private void setQuizVisibility (String phpFile) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + phpFile).newBuilder();
+        urlBuilder.addQueryParameter("quizID", Integer.toString(QUIZ.ID));
+        urlBuilder.addQueryParameter("quizVisibility",Integer.toString(QUIZ.VISIBILITY));
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            @Generated
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            @Generated
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+                BrowseQuizQuestions.this.runOnUiThread(new Runnable() {
+                    @Override
+                    @Generated
+                    public void run() {
+                            Toast toast = Toast.makeText(BrowseQuizQuestions.this,"Successful", Toast.LENGTH_LONG);
+                            toast.show();
                     }
                 });
             }

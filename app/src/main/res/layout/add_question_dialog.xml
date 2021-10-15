@@ -7,6 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialogQuestionText"
         android:layout_width="match_parent"
@@ -159,5 +168,6 @@
                 android:text="cancel"
                 android:textColor="@color/white" />
         </RelativeLayout>
-
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

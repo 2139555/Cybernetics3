@@ -79,8 +79,19 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
         holder.setIsRecyclable(false);
         holder.quizID.setText(quizV.getQuizID());
         holder.quizName.setText(quizV.getQuizName());
-        holder.quizMarkAlloc.setText(quizV.getQuizMarkAlloc()+" points");
-        holder.quizNumQuestions.setText(quizV.getQuizNumQuestions() + " questions");
+        if (quizV.getQuizMarkAlloc()==1){
+            holder.quizMarkAlloc.setText(quizV.getQuizMarkAlloc()+" point");
+        }
+        else{
+            holder.quizMarkAlloc.setText(quizV.getQuizMarkAlloc()+" points");
+        }
+        if (quizV.getQuizNumQuestions()==1){
+            holder.quizNumQuestions.setText(quizV.getQuizNumQuestions() + " question");
+        }
+        else{
+            holder.quizNumQuestions.setText(quizV.getQuizNumQuestions() + " questions");
+        }
+
         holder.quizVisibility.setText(""+quizV.getQuizVisibility());
         if (USER.STUDENT){
             holder.quizEye.setVisibility(View.GONE);
@@ -125,6 +136,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 public void onClick(View view) {
                     QUIZ.ID = Integer.parseInt(quizID.getText().toString());
                     QUIZ.NAME = quizName.getText().toString();
+                    QUIZ.VISIBILITY = Integer.parseInt(quizVisibility.getText().toString());
                     Intent i = new Intent(context,BrowseQuizQuestions.class);
                     context.startActivity(i);
                 }

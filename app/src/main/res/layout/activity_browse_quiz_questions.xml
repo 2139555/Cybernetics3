@@ -36,17 +36,29 @@
                     android:text="Quiz"
                     android:textColor="@color/color2"
                     android:textSize="30dp" />
+
+                <ImageView
+                    android:id="@+id/editQuizVisibility"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_baseline_visibility_off_24"  />
             </LinearLayout>
-            <Button
-                android:id="@+id/addQuestion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:background="@color/color3"
-                android:padding="10dp"
-                android:text="add question"
-                android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/addQuestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/color3"
+                    android:padding="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="add question"
+                    android:textColor="@color/white" />
+
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_marginTop="20dp"

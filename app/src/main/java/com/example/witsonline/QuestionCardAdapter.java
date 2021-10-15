@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -99,6 +100,19 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             answerOption2 = (RadioButton) itemView.findViewById(R.id.option2);
             answerOption3 = (RadioButton) itemView.findViewById(R.id.option3);
             answerOption4 = (RadioButton) itemView.findViewById(R.id.option4);
+
+            //disable radio buttons if an instructor
+            if (!USER.STUDENT){
+                answerOption1.setEnabled(false);
+                answerOption1.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption2.setEnabled(false);
+                answerOption2.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption3.setEnabled(false);
+                answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption4.setEnabled(false);
+                answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+            }
+
         }
     }
 

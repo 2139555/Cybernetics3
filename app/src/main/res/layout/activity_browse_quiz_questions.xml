@@ -79,6 +79,17 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/noQuizQuestions"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="invisible"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="No Questions Created"
+                android:textSize="30dp" />
+
+
         </LinearLayout>
 
     </RelativeLayout>

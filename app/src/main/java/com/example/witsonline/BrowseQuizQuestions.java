@@ -152,8 +152,8 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                     //If an error occurs that means end of the list has been reached
 
                     if(listQuestions.isEmpty()){
-                       /* TextView noLessons = (TextView)findViewById(R.id.noLessonItems);
-                        noLessons.setVisibility(View.VISIBLE);*/
+                        TextView noQuestions = (TextView) findViewById(R.id.noQuizQuestions);
+                        noQuestions.setVisibility(View.VISIBLE);
                     }
                     else{
                         Toast.makeText(BrowseQuizQuestions.this, "No More Items Available", Toast.LENGTH_SHORT).show();

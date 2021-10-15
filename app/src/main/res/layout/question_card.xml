@@ -39,25 +39,27 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/questionNO"
                         android:text="No"
-                        android:textSize="20dp"
+                        android:textSize="17dp"
                         android:layout_marginLeft="5dp"
                         />
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="260dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/question"
                         android:text="This is the question"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         android:layout_marginStart="10dp"
                         android:layout_toEndOf="@+id/questionNO"
                         />
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/questionMarks"
-                        android:text="Marks"
-                        android:textSize="20dp"
-                        android:layout_marginStart="110dp"
+                        android:text="Mark"
+                        android:layout_alignParentRight="true"
+                        android:textSize="17dp"
+                        android:layout_toEndOf="@+id/question"
+                        android:layout_marginStart="50dp"
                         />
                 </LinearLayout>
                 <RadioButton

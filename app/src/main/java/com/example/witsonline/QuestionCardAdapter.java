@@ -56,7 +56,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         holder.answerOption4.setText(question.getAnswerOption4());
         holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
         String[] questNo = question.getQuestionID().split("-");
-        holder.questionNo.setText("(" + questNo[1] + ")");
+        holder.questionNo.setText(questNo[1] + ".");
         if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
             holder.answerOption1.setChecked(true);
         }

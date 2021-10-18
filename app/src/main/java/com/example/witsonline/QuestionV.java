@@ -1,6 +1,6 @@
 package com.example.witsonline;
 
-public class Question{
+public class QuestionV{
     private String questionID;
     private int questionQuiz;
     private String questionText;

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapter.ViewHolder> {
     private Context context;
-    ArrayList<Question> questions; //List to store all Courses
+    ArrayList<QuestionV> questions; //List to store all Courses
     //For determining if student is a tutor
 
 
@@ -25,7 +25,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
 
     //Constructor of this class
-    public QuestionCardAdapter(ArrayList<Question> questions, Context context) {
+    public QuestionCardAdapter(ArrayList<QuestionV> questions, Context context) {
         super();
         //Getting all requests
         this.questions= questions;
@@ -47,7 +47,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     @Generated
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //Getting the particular item from the list
-        final Question question= questions.get(position);
+        final QuestionV question= questions.get(position);
 
         holder.question.setText(questions.get(position).getQuestionText());
         holder.answerOption1.setText(question.getAnswerOption1());

@@ -45,7 +45,7 @@ import okhttp3.Response;
 
 public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScrollChangeListener{
     TextView quizName;
-    private ArrayList<Question> listQuestions;
+    private ArrayList<QuestionV> listQuestions;
     private String answerOptions[] ={"Select answer","Answer option 1","Answer option 2","Answer option 3"," Answer option 4"};
     private RecyclerView recyclerView;
     //Volley Request Queue
@@ -66,13 +66,14 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
     private ImageView quizEye;
     private Spinner spinner;
     private int correctAnswer;
+    private boolean correctAnswerSelected = false;
 
     //quiz visibility dialog
     private TextView visibilityText;
     private Button dialogVisibilityYes;
     private Button dialogVisibilityNo;
 
-    private boolean correctAnswerSelected = false;
+
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
     String ansURL = "https://lamp.ms.wits.ac.za/home/s2105624/answerFeed.php?page=";
     @Override
@@ -177,7 +178,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
     private void parseData(JSONArray array) throws JSONException {
         for (int i = 0; i< array.length(); i++) {
             // Creating the Course object
-            Question question = new Question();
+            QuestionV question = new QuestionV();
             JSONObject json = null;
             try {
                 //Getting json
@@ -258,6 +259,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
             @Generated
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 correctAnswer = position;
+                correctAnswerSelected = true;
             }
 
             @Override
@@ -276,8 +278,8 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 isEmpty(answerOption2);
                 isEmpty(answerOption3);
                 isEmpty(answerOption4);
-                isEmpty(markAlloc);
-                if(!isEmpty(question) && !isEmpty(answerOption1)&& !isEmpty(answerOption2)&&!isEmpty(answerOption3)&&!isEmpty(answerOption4) && !isEmpty(markAlloc)){
+                invalidMark(markAlloc);
+                if(!noAnswerSelected() && !isEmpty(question) && !isEmpty(answerOption1)&& !isEmpty(answerOption2)&&!isEmpty(answerOption3)&&!isEmpty(answerOption4) && !invalidMark(markAlloc)){
                     String quest = question.getEditText().getText().toString();
                     String ans1 = answerOption1.getEditText().getText().toString();
                     String ans2 = answerOption2.getEditText().getText().toString();
@@ -438,6 +440,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
             }
         });
     }
+
     public boolean isEmpty(TextInputLayout text) {
         boolean empty = false;
         text.setError(null);
@@ -448,6 +451,33 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         return empty;
     }
+
+    public boolean invalidMark(TextInputLayout text) {
+        boolean invalid = false;
+        text.setError(null);
+        String mark = text.getEditText().getText().toString();
+        if (mark.isEmpty()) {
+            text.setError("Field can't be empty");
+            invalid = true;
+        }
+        else {
+           int m = Integer.parseInt(mark);
+            if (m == 0) {
+                text.setError("Mark must be greater than 0");
+                invalid = true;
+            }
+        }
+        return invalid;
+    }
+
+    public boolean noAnswerSelected() {
+        if (!correctAnswerSelected) {
+            Toast.makeText(BrowseQuizQuestions.this,"Select a correct answer", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
+    }
+
 
     //This me+thod will check if the recyclerview has reached the bottom or not
     public boolean isLastItemDistplaying(RecyclerView recyclerView){

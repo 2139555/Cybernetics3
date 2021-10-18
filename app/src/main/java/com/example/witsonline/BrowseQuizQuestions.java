@@ -197,7 +197,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 question.setAnswerOption3ID(json.getInt("5"));
                 question.setAnswerOption4(json.getString("6"));
                 question.setAnswerOption4ID(json.getInt("7"));
-                question.setCorrectOption(json.getString("7"));
+                question.setCorrectOption(json.getString("8"));
 
             } catch (JSONException e) {
                 e.printStackTrace();

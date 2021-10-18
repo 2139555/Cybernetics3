@@ -190,11 +190,14 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 question.setQuestionMarkAlloc(json.getInt("questionMark"));
 
                 question.setAnswerOption1(json.getString("0"));
-                question.setAnswerOption2(json.getString("1"));
-                question.setAnswerOption3(json.getString("2"));
-                question.setAnswerOption4(json.getString("3"));
-
-                question.setCorrectOption(json.getString("4"));
+                question.setAnswerOption1ID(json.getInt("1"));
+                question.setAnswerOption2(json.getString("2"));
+                question.setAnswerOption2ID(json.getInt("3"));
+                question.setAnswerOption3(json.getString("4"));
+                question.setAnswerOption3ID(json.getInt("5"));
+                question.setAnswerOption4(json.getString("6"));
+                question.setAnswerOption4ID(json.getInt("7"));
+                question.setCorrectOption(json.getString("7"));
 
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -10,6 +10,10 @@ public class QuestionV{
     private String answerOption3;
     private String answerOption4;
     private String correctOption;
+    private int answerOption1ID;
+    private int answerOption2ID;
+    private int answerOption3ID;
+    private int answerOption4ID;
 
 
     //Setters
@@ -40,6 +44,18 @@ public class QuestionV{
     void  setCorrectOption(String answer){
         this.correctOption =answer;
     }
+    void setAnswerOption1ID(int answerId){
+        this.answerOption1ID = answerId;
+    }
+    void setAnswerOption2ID(int answerId){
+        this.answerOption2ID = answerId;
+    }
+    void setAnswerOption3ID(int answerId){
+        this.answerOption3ID = answerId;
+    }
+    void setAnswerOption4ID(int answerId){
+        this.answerOption4ID = answerId;
+    }
     //Getters
     String getQuestionID(){
         return this.questionID;
@@ -67,6 +83,18 @@ public class QuestionV{
     }
     String getCorrectOption(){
         return this.correctOption;
+    }
+    int getAnswerOption1ID(){
+        return this.answerOption1ID;
+    }
+    int getAnswerOption2ID(){
+        return this.answerOption2ID;
+    }
+    int getAnswerOption3ID(){
+        return this.answerOption3ID;
+    }
+    int getAnswerOption4ID(){
+        return this.answerOption4ID;
     }
 
 }

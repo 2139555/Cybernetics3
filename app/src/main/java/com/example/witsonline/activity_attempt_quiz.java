@@ -42,7 +42,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
     private RecyclerView.Adapter adapter;
 
 
-    private ArrayList<Question> listQuestions;
+    private ArrayList<QuestionV> listQuestions;
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
 
     @Override
@@ -129,7 +129,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
     private void parseData(JSONArray array) throws JSONException {
         for (int i = 0; i< array.length(); i++) {
             // Creating the Course object
-            Question question = new Question();
+            QuestionV question = new QuestionV();
             JSONObject json = null;
             try {
                 //Getting json

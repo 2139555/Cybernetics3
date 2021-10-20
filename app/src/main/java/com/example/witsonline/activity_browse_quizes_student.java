@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -35,12 +36,28 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
 
 
     private ArrayList<QuizV> listQuizVs;
+    Bundle extras;
+    private boolean browse = false;
+    private boolean mycourses = false;
+    private boolean dashboard = false;
 
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/getQuizes_student.php?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_browse_quizes_student );
+        extras = getIntent().getExtras();
+        if (extras != null) {
+            String act = extras.getString("activity");
+            if (act.contains("BrowseCourses")) {
+                browse = true;
+            } else if (act.contains("Dashboard")) {
+                dashboard = true;
+
+            } else {
+                mycourses = true;
+            }
+        }
         course = (TextView)findViewById( R.id.quizCourseCode_st);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_quizes_st);
@@ -162,5 +179,21 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
             }
         });
 
+    }
+    @Override
+    @Generated
+    public void onBackPressed() {
+        Intent intent = new Intent(activity_browse_quizes_student.this , CourseHomePage.class);
+        if(browse){
+            intent.putExtra("activity",""+BrowseCourses.class);
+        }
+        else if(mycourses){
+            intent.putExtra("activity",""+MyCourses.class);
+        }
+        else{
+            intent.putExtra("activity",""+Dashboard.class);
+        }
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

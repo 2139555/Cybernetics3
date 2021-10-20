@@ -86,6 +86,36 @@
                     android:layout_height="wrap_content"
                     android:text="this is answer option 4" />
             </RadioGroup>
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:id="@+id/correctAnswerID"
+                android:text="correctAnswerID"
+                />
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:id="@+id/Answer1ID"
+                android:text="correctAnswer1ID"
+                />
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:id="@+id/Answer2ID"
+                android:text="correctAnswer2ID"
+                />
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:id="@+id/Answer3ID"
+                android:text="correctAnswer3ID"
+                />
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:id="@+id/Answer4ID"
+                android:text="correctAnswer4ID"
+                />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

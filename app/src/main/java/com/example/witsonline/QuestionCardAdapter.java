@@ -84,37 +84,59 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     @Generated
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //Getting the particular item from the list
-        final QuestionV question= questions.get(position);
 
-        holder.question.setText(questions.get(position).getQuestionText());
-        holder.answerOption1.setText(question.getAnswerOption1());
-        holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
-        holder.answerOption2.setText(question.getAnswerOption2());
-        holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
-        holder.answerOption3.setText(question.getAnswerOption3());
-        holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
-        holder.answerOption4.setText(question.getAnswerOption4());
-        holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
-        holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
-        String[] questNo = question.getQuestionID().split("-");
-        holder.questionNo.setText(questNo[1] + ".");
-        if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption1.setChecked(true);
-            holder.checkedID.setText("1");
+        final QuestionV question = questions.get(position);
+        if(!USER.STUDENT){
+
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+            if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption1.setChecked(true);
+                holder.checkedID.setText("1");
+            }
+            else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption2.setChecked(true);
+                holder.checkedID.setText("2");
+            }
+            else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption3.setChecked(true);
+                holder.checkedID.setText("3");
+            }
+            else{
+                holder.answerOption4.setChecked(true);
+                holder.checkedID.setText("4");
+
+            }
         }
-        else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption2.setChecked(true);
-            holder.checkedID.setText("2");
+        else {
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
         }
-        else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption3.setChecked(true);
-            holder.checkedID.setText("3");
-        }
-        else{
-            holder.answerOption4.setChecked(true);
-            holder.checkedID.setText("4");
-        }
+
+
+
     }
+
 
     @Override
     @Generated
@@ -166,6 +188,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.black));
                 answerOption4.setEnabled(false);
                 answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+            }
+            else{
+                rgAnswerOptions.clearCheck();
             }
 
 

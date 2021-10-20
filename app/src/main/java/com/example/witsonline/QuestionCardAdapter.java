@@ -48,28 +48,43 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //Getting the particular item from the list
         final Question question= questions.get(position);
+        if(!USER.STUDENT){
 
-        holder.question.setText(questions.get(position).getQuestionText());
-        holder.answerOption1.setText(question.getAnswerOption1());
-        holder.answerOption2.setText(question.getAnswerOption2());
-        holder.answerOption3.setText(question.getAnswerOption3());
-        holder.answerOption4.setText(question.getAnswerOption4());
-        holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
-        String[] questNo = question.getQuestionID().split("-");
-        holder.questionNo.setText(questNo[1] + ".");
-        if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption1.setChecked(true);
-        }
-        else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption2.setChecked(true);
-        }
-        else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption3.setChecked(true);
+
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+            if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption1.setChecked(true);
+            }
+            else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption2.setChecked(true);
+            }
+            else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption3.setChecked(true);
+            }
+            else{
+                holder.answerOption4.setChecked(true);
+            }
         }
         else{
-            holder.answerOption4.setChecked(true);
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+
         }
     }
+
 
     @Override
     @Generated
@@ -111,6 +126,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.black));
                 answerOption4.setEnabled(false);
                 answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+            }
+            else{
+                rgAnswerOptions.clearCheck();
             }
 
         }

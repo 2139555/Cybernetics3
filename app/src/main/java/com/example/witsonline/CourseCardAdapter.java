@@ -372,6 +372,7 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
             @Generated
             public void onClick(View v) {
                 //INSTRUCTOR.USERNAME = instUsernames.get(courseCode.getText());
+
                 dialog.dismiss();
                 Intent i = new Intent(context, CourseHomePage.class);
                 i.putExtra("activity", "" + context);

@@ -4,6 +4,8 @@
     <string name="welcome">Welcome</string>
 
     <string name="home">Home</string>
+    <string name="requests_tutor">Requests</string>
+    <string name="quizes">Quizes</string>
     <string name="my_courses">My Courses</string>
     <string name="browse">Browse</string>
     <string name="create">Create</string>

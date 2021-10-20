@@ -25,6 +25,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -56,16 +57,19 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
     private boolean mycourses = false;
     private boolean dashboard = false;
     private Button viewLesson;
-    private TextView courseInstructor;
+    private TextView courseInstructor ;
     //Creating a list of Courses
     private ArrayList<ReviewV> listReviewVs;
     private ImageView imgEditCourse;
 
     //for determining whether a student is a tutor or not
     private boolean tutor;
+    private boolean EnrolmentP_Granted = false;
+
 
     //If its a tutor and the course has permissions
     private android.view.Menu courseMenu;
+    boolean tutorstate = false;
 
     //Creating a list of tags
     private ArrayList<String> tags;
@@ -805,10 +809,13 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                                 //Toast.makeText(this, ""+tutorState, Toast.LENGTH_LONG).show();
 
                                 if (tutorState == 1){
+
                                     //if student is a tutor, they can see the requests menu
-                                    MenuItem item = courseMenu.findItem(R.id.menu_view_requests);
-                                    item.setVisible(true);
+                                    tutorstate = true;
+
+
                                 }
+
 
 
                             }
@@ -861,12 +868,16 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                                 if (requestPermissionState == 1){
                                     //if permission to accept and decline requests is granted by instructor
                                     try {
+                                        EnrolmentP_Granted = true;
                                         checkTutorState();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
                                     //Toast toast = Toast.makeText(CourseHomePage.this, "permission granted", Toast.LENGTH_LONG);
                                     //toast.show();
+                                }
+                                else if(requestPermissionState == 0){
+                                    Toast.makeText( CourseHomePage.this,"Permission is off!" , Toast.LENGTH_SHORT ).show();
                                 }
 
 
@@ -904,10 +915,23 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
     @Override
     @Generated
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.menu_tutor,menu);
-        courseMenu = menu;
 
+
+       MenuInflater inflater = getMenuInflater();
+       inflater.inflate( R.menu.menu_tutor,menu);
+       courseMenu = menu;
+
+
+
+        return true;
+    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        if(tutor && tutorstate && EnrolmentP_Granted)
+            menu.add(0, 1, Menu.NONE, R.string.requests_tutor);
+        if(!tutor)
+            menu.add(0, 2, Menu.NONE, R.string.quizes);
         return true;
     }
 
@@ -915,7 +939,7 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
     @Generated
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_view_requests:
+            case 1:
                 Intent intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
                 if(browse){
                     intent.putExtra("activity",""+BrowseCourses.class);
@@ -927,6 +951,9 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                     intent.putExtra("activity",""+Dashboard.class);
                 }
                 startActivity(intent);
+            case 2:
+                Intent i = new Intent(CourseHomePage.this, activity_browse_quizes_student.class);
+                startActivity( i );
 
         }
         return super.onOptionsItemSelected(item);

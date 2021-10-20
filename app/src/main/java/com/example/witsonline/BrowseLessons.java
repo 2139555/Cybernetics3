@@ -293,15 +293,11 @@ public class BrowseLessons extends AppCompatActivity implements View.OnScrollCha
     @Override
     @Generated
     public void onBackPressed(){
-        if (student == false){
-            Intent i = new Intent(this,CourseHomePageInstructor.class);
-            startActivity(i);
-            finish();
-        }else{
-            Intent i = new Intent(this,CourseHomePage.class);
-            startActivity(i);
-            finish();
-        }
+
+        Intent i = new Intent(this,CourseHomePageInstructor.class);
+        startActivity(i);
+        finish();
+
 
     }
 

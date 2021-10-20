@@ -1,5 +1,6 @@
 package com.example.witsonline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -302,6 +303,13 @@ public class Permissions extends AppCompatActivity {
     @Generated
     private void UpdateData(String responseData) {
         PermissionString = responseData;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, CourseHomePageInstructor.class);
+        startActivity( i );
+        super.onBackPressed();
     }
 
     @Generated

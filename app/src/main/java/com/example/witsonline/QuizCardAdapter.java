@@ -137,8 +137,16 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                     QUIZ.ID = Integer.parseInt(quizID.getText().toString());
                     QUIZ.NAME = quizName.getText().toString();
                     QUIZ.VISIBILITY = Integer.parseInt(quizVisibility.getText().toString());
-                    Intent i = new Intent(context,BrowseQuizQuestions.class);
-                    context.startActivity(i);
+
+                    if(USER.STUDENT){
+                        Intent i = new Intent(context,activity_attempt_quiz.class);
+                        context.startActivity(i);
+                    }
+                    else{
+                        Intent i = new Intent(context,BrowseQuizQuestions.class);
+                        context.startActivity(i);
+                    }
+
                 }
             });
         }

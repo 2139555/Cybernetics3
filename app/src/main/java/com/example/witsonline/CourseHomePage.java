@@ -230,6 +230,8 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                 if(subscribe.getText().toString().trim().equals("SUBSCRIBE")){
                     //display forum if student is subscribed to course
                     imgForum.setVisibility(View.VISIBLE);
+                    MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                    item.setVisible(true);
                     try {
                         doPostRequest("enrol.php");
                         subscribe.setText("SUBSCRIBED");
@@ -583,12 +585,16 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                         if(responseData.trim().equals("subscribed")){
                             //display forum if student is subscribed to course
                             imgForum.setVisibility(View.VISIBLE);
+                            MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                            item.setVisible(true);
                             subscribe.setText("SUBSCRIBED");
                             getTutorStateData(); //to determine if student is a tutor
                         }
                         if(responseData.trim().equals("not subscribed")){
                             // don't display forum if student is not subscribed to course
                             imgForum.setVisibility(View.GONE);
+                            MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                            item.setVisible(false);
                             subscribe.setText("SUBSCRIBE");
                            // btnUnsubscribe.setText("SUBSCRIBE");
                         }
@@ -627,6 +633,8 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
             public void onClick(View v) {
                 // don't display forum if student is not subscribed to course
                 imgForum.setVisibility(View.GONE);
+                MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                item.setVisible(false);
                 subscribe.setText("SUBSCRIBE");
                 try {
                     doPostRequest("unsubscribe.php");

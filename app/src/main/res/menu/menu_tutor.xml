@@ -5,4 +5,9 @@
         android:enabled="true"
         android:visible="false"
         android:title="View Requests" />
+    <item
+        android:id="@+id/menu_quizzes"
+        android:enabled="true"
+        android:visible="false"
+        android:title="Quizzes" />
 </menu>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -374,7 +375,13 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         dialogVisibilityNo = viewPopUp.findViewById(R.id.btn_visibility_no);
 
         if (QUIZ.VISIBILITY==1){
-            visibilityText.setText("Do you want to hide this quiz?");
+            //visibilityText.setText("Do you want to hide this quiz?");
+            //check whether any attempt was made
+            try {
+                doAttemptRequest("checkQuizAttempts.php");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else{
             visibilityText.setText("Do you want to publish this quiz?");
@@ -387,15 +394,20 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 if (QUIZ.VISIBILITY == 0){
                     quizEye.setImageResource(R.drawable.ic_baseline_visibility_24);
                     QUIZ.VISIBILITY = 1;
+                    try {
+                        setQuizVisibility("updateQuizVisibility.php");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                else{
+                else if (visibilityText.getText().toString().trim().equals("Do you want to hide this quiz?")){
                     quizEye.setImageResource(R.drawable.ic_baseline_visibility_off_24);
                     QUIZ.VISIBILITY =0;
-                }
-                try {
-                    setQuizVisibility("updateQuizVisibility.php");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    try {
+                        setQuizVisibility("updateQuizVisibility.php");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 dialog.dismiss();
             }
@@ -408,6 +420,50 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
             }
         });
     }
+
+    @Generated
+    private void doAttemptRequest(String phpFile) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + phpFile).newBuilder();
+        urlBuilder.addQueryParameter("quizID", Integer.toString(QUIZ.ID));
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            @Generated
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            @Generated
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+                BrowseQuizQuestions.this.runOnUiThread(new Runnable() {
+                    @Override
+                    @Generated
+                    public void run() {
+                            if (responseData.trim().equals("attempt")) {
+                                visibilityText.setText("This quiz cannot be hidden as it has already been attempted.");
+                                dialogVisibilityYes.setText("OKAY");
+                                dialogVisibilityNo.setText("CANCEL");
+                            }
+                            else{
+                                visibilityText.setText("Do you want to hide this quiz?");
+                            }
+
+                    }
+                });
+            }
+        });
+    }
+
 
     @Generated
     private void setQuizVisibility (String phpFile) throws IOException {

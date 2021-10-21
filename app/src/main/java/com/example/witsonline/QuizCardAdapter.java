@@ -46,8 +46,12 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
     ArrayList<QuizV> QuizVs; //List to store all Courses
     //For determining if student is a tutor
 
-
-    private ProgressBar progressBarReq;
+    //Dialog
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
+    private ProgressBar progressBar;
+    private Button btnAttempt, btnCancel;
+    private TextView attemptText;
 
 
     //Constructor of this class
@@ -113,6 +117,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
 
     @Generated
     class ViewHolder extends RecyclerView.ViewHolder {
+
         //Views
         public TextView quizID;
         public TextView quizName;
@@ -139,8 +144,9 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                     QUIZ.VISIBILITY = Integer.parseInt(quizVisibility.getText().toString());
 
                     if(USER.STUDENT){
-                        Intent i = new Intent(context,activity_attempt_quiz.class);
-                        context.startActivity(i);
+                        createNewAttemptDialog();
+                        // i = new Intent(context,activity_attempt_quiz.class);
+                        //context.startActivity(i);
                     }
                     else{
                         Intent i = new Intent(context,BrowseQuizQuestions.class);
@@ -152,5 +158,104 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
         }
     }
 
+    @Generated
+    public void createNewAttemptDialog() {
+        dialogBuilder = new AlertDialog.Builder(context);
+        final View viewPopUp = LayoutInflater.from(context)
+                .inflate(R.layout.student_quiz_dialog, null);
+
+        attemptText = (TextView) viewPopUp.findViewById(R.id.attemptText);
+        btnAttempt = (Button) viewPopUp.findViewById(R.id.AttemptQuiz);
+        btnCancel = (Button) viewPopUp.findViewById(R.id.cancelAttemptQuiz);
+        progressBar = (ProgressBar) viewPopUp.findViewById(R.id.progressBarQuizDialog);
+        progressBar.setVisibility(View.VISIBLE);
+        dialogBuilder.setView(viewPopUp);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+        //check whether attempt was made
+        try {
+            doAttemptRequest("checkQuizAttempt.php");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        btnAttempt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @Generated
+            public void onClick(View v) {
+                if (btnAttempt.getText().toString().trim().equals("ATTEMPT")) {
+                    //attempt quiz
+                    Intent i = new Intent(context,activity_attempt_quiz.class);
+                    context.startActivity(i);
+                    dialog.dismiss();
+                }
+                else{
+                    //view quiz feedback
+                    Toast.makeText(context, "add quiz feedback intent here", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            @Generated
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+
+    @Generated
+    private void doAttemptRequest(String phpFile) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + phpFile).newBuilder();
+        urlBuilder.addQueryParameter("studentNumber", USER.USERNAME);
+        urlBuilder.addQueryParameter("quizID", Integer.toString(QUIZ.ID));
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            private Activity cont = (Activity) context;
+
+            @Override
+            @Generated
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            @Generated
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+                cont.runOnUiThread(new Runnable() {
+                    @Override
+                    @Generated
+                    public void run() {
+                        if (btnAttempt != null) {
+                            if (responseData.trim().equals("attempt")) {
+                                btnAttempt.setText("VIEW");
+                                attemptText.setText("Do you want to view feedback for this quiz?");
+                            }
+                            if (progressBar != null) {
+                                attemptText.setVisibility(View.VISIBLE);
+                                btnAttempt.setVisibility(View.VISIBLE);
+                                btnCancel.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+
+                    }
+                });
+            }
+        });
+    }
 
 }

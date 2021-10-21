@@ -230,6 +230,8 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                 if(subscribe.getText().toString().trim().equals("SUBSCRIBE")){
                     //display forum if student is subscribed to course
                     imgForum.setVisibility(View.VISIBLE);
+                    MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                    item.setVisible(true);
                     try {
                         doPostRequest("enrol.php");
                         subscribe.setText("SUBSCRIBED");
@@ -583,12 +585,16 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                         if(responseData.trim().equals("subscribed")){
                             //display forum if student is subscribed to course
                             imgForum.setVisibility(View.VISIBLE);
+                            MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                            item.setVisible(true);
                             subscribe.setText("SUBSCRIBED");
                             getTutorStateData(); //to determine if student is a tutor
                         }
                         if(responseData.trim().equals("not subscribed")){
                             // don't display forum if student is not subscribed to course
                             imgForum.setVisibility(View.GONE);
+                            MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                            item.setVisible(false);
                             subscribe.setText("SUBSCRIBE");
                            // btnUnsubscribe.setText("SUBSCRIBE");
                         }
@@ -627,6 +633,8 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
             public void onClick(View v) {
                 // don't display forum if student is not subscribed to course
                 imgForum.setVisibility(View.GONE);
+                MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
+                item.setVisible(false);
                 subscribe.setText("SUBSCRIBE");
                 try {
                     doPostRequest("unsubscribe.php");
@@ -812,8 +820,8 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
 
                                     //if student is a tutor, they can see the requests menu
                                     tutorstate = true;
-
-
+                                    MenuItem item = courseMenu.findItem(R.id.menu_view_requests);
+                                    item.setVisible(true);
                                 }
 
 
@@ -868,7 +876,6 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                                 if (requestPermissionState == 1){
                                     //if permission to accept and decline requests is granted by instructor
                                     try {
-                                        EnrolmentP_Granted = true;
                                         checkTutorState();
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -925,22 +932,13 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
 
         return true;
     }
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
-        if(tutor && tutorstate && EnrolmentP_Granted)
-            menu.add(0, 1, Menu.NONE, R.string.requests_tutor);
-        if(!tutor)
-            menu.add(0, 2, Menu.NONE, R.string.quizes);
-        return true;
-    }
 
     @Override
     @Generated
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case 1:
-                Intent intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
+        Intent intent;
+        if (item.getItemId() == R.id.menu_quizzes){
+                intent = new Intent(CourseHomePage.this, activity_browse_quizes_student.class);
                 if(browse){
                     intent.putExtra("activity",""+BrowseCourses.class);
                 }
@@ -951,11 +949,24 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                     intent.putExtra("activity",""+Dashboard.class);
                 }
                 startActivity(intent);
-            case 2:
-                Intent i = new Intent(CourseHomePage.this, activity_browse_quizes_student.class);
-                startActivity( i );
+        }
+
+        else if(item.getItemId() == R.id.menu_view_requests){
+                 intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
+                if(browse){
+                    intent.putExtra("activity",""+BrowseCourses.class);
+                }
+                else if(mycourses){
+                    intent.putExtra("activity",""+MyCourses.class);
+                }
+                else{
+                    intent.putExtra("activity",""+Dashboard.class);
+                }
+                startActivity(intent);
+
 
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -173,7 +173,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
         dialog = dialogBuilder.create();
         dialog.show();
 
-        //check whether request was sent
+        //check whether attempt was made
         try {
             doAttemptRequest("checkQuizAttempt.php");
         } catch (IOException e) {

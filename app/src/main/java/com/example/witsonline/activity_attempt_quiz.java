@@ -312,11 +312,11 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
                 question.setQuestionMarkAlloc(json.getInt("questionMark"));
 
                 question.setAnswerOption1(json.getString("0"));
-                question.setAnswerOption2(json.getString("1"));
-                question.setAnswerOption3(json.getString("2"));
-                question.setAnswerOption4(json.getString("3"));
+                question.setAnswerOption2(json.getString("2"));
+                question.setAnswerOption3(json.getString("4"));
+                question.setAnswerOption4(json.getString("6"));
 
-                question.setCorrectOption(json.getString("4"));
+                question.setCorrectOption(json.getString("8"));
 
             } catch (JSONException e) {
                 e.printStackTrace();

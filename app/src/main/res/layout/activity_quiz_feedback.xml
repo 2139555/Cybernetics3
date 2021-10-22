@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".QuizFeedback">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/quiz_feedback_topic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/vegur_bold"
+                android:text="Topic"
+                android:textColor="@color/color2"
+                android:textSize="30dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnDoneQuizFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/color3"
+            android:padding="10dp"
+            android:text="Done"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/marks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10 out of 15 points"
+            android:textSize="24sp"
+            android:layout_marginStart="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/feedbackRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp" />
+
+            <ProgressBar
+                android:id="@+id/questionProgressBar_AttemptQuiz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="185dp"
+                android:layout_centerInParent="true" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

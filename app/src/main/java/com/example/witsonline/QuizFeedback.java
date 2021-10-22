@@ -1,74 +1,76 @@
 package com.example.witsonline;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.textfield.TextInputLayout;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-public class activity_attempt_quiz extends AppCompatActivity implements View.OnScrollChangeListener{
-    Button Submit;
-    Button yes;
-    Button no;
-    TextView submitQuestion;
+public class QuizFeedback extends AppCompatActivity implements View.OnScrollChangeListener {
+    Button Done;
     TextView QuizTopic;
+    TextView QuizScore;
     RecyclerView recyclerView;
+
+    //for getting marks
+    String total;
+    String markObtained;
+    int intTotal = 0;
+    int intMarkObtained = 0;
+
     //Volley Request Queue
     private RequestQueue requestQueue;
     private int questionCount = 1;
+
     //Questions recyclerView
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
-
     private ArrayList<QuestionV> listQuestions;
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
+    String getQuizURL = "https://lamp.ms.wits.ac.za/home/s2105624/getQuizes_student.php?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_attempt_quiz );
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_quiz_feedback);
 
-        Submit = (Button)findViewById( R.id.btnSubmitQuiz_st );
-
-        Submit.setOnClickListener(new View.OnClickListener() {
+        Done = (Button)findViewById( R.id.btnDoneQuizFeedback );
+        Done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submitQuizDialog();
+                Intent intent = new Intent(QuizFeedback.this,activity_browse_quizes_student.class);
+                startActivity(intent);
             }
         });
 
-        QuizTopic = (TextView)findViewById( R.id.quiz_topic_st);
+        QuizTopic = (TextView)findViewById( R.id.quiz_feedback_topic);
+        QuizScore = (TextView)findViewById( R.id.marks);
 
-        recyclerView = (RecyclerView) findViewById(R.id.questionsRecyclerView_st);
+        //setting marks
+        QuizScore.setText("x out of " + QUIZ.MARK_ALLOC + " points");
+
+        recyclerView = (RecyclerView) findViewById(R.id.feedbackRecyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -76,7 +78,6 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
         listQuestions = new ArrayList<>();
         getData();
-
 
         recyclerView.setOnScrollChangeListener(this);
 
@@ -87,41 +88,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         recyclerView.setAdapter(adapter);
         QuizTopic.setText(QUIZ.NAME);
 
-
-
     }
-
-    @Generated
-    public void submitQuizDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        final View viewPopUp = LayoutInflater.from(this)
-                .inflate(R.layout.view_profile_dialog, null);
-
-        dialogBuilder.setView(viewPopUp);
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-
-        submitQuestion = (TextView) viewPopUp.findViewById(R.id.viewProfileQuestion);
-        submitQuestion.setText("Are you sure you want to submit?");
-        yes = (Button) viewPopUp.findViewById(R.id.btnView);
-        yes.setText("Yes");
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(activity_attempt_quiz.this,QuizFeedback.class);
-                startActivity(intent);
-            }
-        });
-        no = (Button) viewPopUp.findViewById(R.id.btnViewCancel);
-        no.setText("No");
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
-
 
     //This method will get Data from the web api
     @Generated
@@ -152,22 +119,13 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
                     //Hiding the progressBar
                     progressBar.setVisibility(View.GONE);
 
-                    if(listQuestions.isEmpty()){
-                        TextView noQuestions = (TextView)findViewById(R.id.noQuestions_AttempQuiz);
-                        noQuestions.setVisibility(View.VISIBLE);
-                    }
+
                 },
                 (error) -> {
                     progressBar.setVisibility(View.GONE);
                     //If an error occurs that means end of the list has been reached
 
-                    if(listQuestions.isEmpty()){
-                        TextView noQuestions = (TextView) findViewById(R.id.noQuestions_AttempQuiz);
-                        noQuestions.setVisibility(View.VISIBLE);
-                    }
-                    else{
-                        Toast.makeText(activity_attempt_quiz.this, "No More Items Available", Toast.LENGTH_SHORT).show();
-                    }
+
                 });
         //Returning the request
         return jsonArrayRequest;
@@ -183,6 +141,12 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
                 //Getting json
                 json = array.getJSONObject(i);
 
+                /*/calculating marks
+                intTotal = intTotal + Integer.parseInt(json.getString("questionMark"));
+                total = String.valueOf(intTotal);
+                intMarkObtained = intMarkObtained + Integer.parseInt(json.getString("questionMark"));
+                markObtained = String.valueOf(intMarkObtained);*/
+
                 //Adding data to the course object
                 question.setQuestionText(json.getString("questionText"));
                 question.setQuestionID(json.getString("questionId"));
@@ -193,11 +157,11 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
                 question.setAnswerOption3(json.getString("2"));
                 question.setAnswerOption4(json.getString("3"));
 
-                question.setCorrectOption(json.getString("4"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             listQuestions.add(question);
             adapter.notifyDataSetChanged();
 
@@ -220,5 +184,11 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
             //Calling the method getData again
             getData();
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(QuizFeedback.this,activity_browse_quizes_student.class);
+        startActivity(intent);
     }
 }

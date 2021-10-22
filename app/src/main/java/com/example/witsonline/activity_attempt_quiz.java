@@ -1,23 +1,27 @@
 package com.example.witsonline;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AlertDialogLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -35,37 +39,31 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class activity_attempt_quiz extends AppCompatActivity implements View.OnScrollChangeListener{
-    Button Submit;
-    Button yes;
-    Button no;
-    TextView submitQuestion;
-    TextView QuizTopic;
-    RecyclerView recyclerView;
+    private Button submit;
+    private TextView QuizTopic;
+    private RecyclerView recyclerView;
+
+
     //Volley Request Queue
     private RequestQueue requestQueue;
     private int questionCount = 1;
     //Questions recyclerView
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adapter;
+    private QuestionCardAdapter adapter;
+    private AlertDialog.Builder dialogBuilder;
+    private AlertDialog dialog;
 
 
     private ArrayList<QuestionV> listQuestions;
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
+    private RecyclerView.ViewHolder holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_attempt_quiz );
 
-        Submit = (Button)findViewById( R.id.btnSubmitQuiz_st );
-
-        Submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                submitQuizDialog();
-            }
-        });
-
+        submit = (Button)findViewById( R.id.btnSubmitQuiz_st );
         QuizTopic = (TextView)findViewById( R.id.quiz_topic_st);
 
         recyclerView = (RecyclerView) findViewById(R.id.questionsRecyclerView_st);
@@ -87,40 +85,165 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         recyclerView.setAdapter(adapter);
         QuizTopic.setText(QUIZ.NAME);
 
+       showWarningDialog();
 
-
-    }
-
-    @Generated
-    public void submitQuizDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        final View viewPopUp = LayoutInflater.from(this)
-                .inflate(R.layout.view_profile_dialog, null);
-
-        dialogBuilder.setView(viewPopUp);
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-
-        submitQuestion = (TextView) viewPopUp.findViewById(R.id.viewProfileQuestion);
-        submitQuestion.setText("Are you sure you want to submit?");
-        yes = (Button) viewPopUp.findViewById(R.id.btnView);
-        yes.setText("Yes");
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(activity_attempt_quiz.this,QuizFeedback.class);
-                startActivity(intent);
-            }
-        });
-        no = (Button) viewPopUp.findViewById(R.id.btnViewCancel);
-        no.setText("No");
-        no.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SubmitQuiz(listQuestions);
+            }
+        } );
+
+
+    }
+
+    private void showWarningDialog() {
+        AlertDialog.Builder DialogBuilder = new AlertDialog.Builder(this);
+        final View viewPopUp = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_quiz_warning_student, null);
+
+        Button dlg_btn_ok = (Button)viewPopUp.findViewById( R.id.Ok_warning);
+        DialogBuilder.setView(viewPopUp);
+        AlertDialog DialoG = DialogBuilder.create();
+        DialoG.show();
+        dlg_btn_ok.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialoG.dismiss();
+            }
+        } );
+
+
+    }
+
+    private void SubmitQuiz(ArrayList<QuestionV> listQuestions) {
+        String AnswerStr = "";
+
+        int Verify = 0;
+        long s;
+
+        ArrayList<QuestionV> Quest = adapter.getAll();
+        for(int i = 0; i<Quest.size();i++){
+            if(i == Quest.size()-1){
+                AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans();
+                if(!(Quest.get(i).getSelcted_ans()).equals("")){
+                    Verify++;
+                }
+
+
+            }
+            else{
+                AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans()+";";
+                if(!(Quest.get(i).getSelcted_ans()).equals("")){
+                    Verify++;
+                }
+            }
+        }
+        boolean X = true;
+        if(Verify != Quest.size()){
+            X = false;
+        }
+        createSubmitDialog(X, AnswerStr);
+
+
+
+
+    }
+
+    private void createSubmitDialog(boolean V,String answerStr) {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View viewPopUp = LayoutInflater.from(this)
+                .inflate(R.layout.dialog_submit_quiz_student, null);
+        TextView question = (TextView)viewPopUp.findViewById( R.id.submit_Text);
+
+        Button dlg_btn_yes = (Button)viewPopUp.findViewById( R.id.Yes_submit );
+        Button dlg_btn_no = (Button)viewPopUp.findViewById( R.id.cancelSubmit );
+
+
+        if(!V){
+            //error dialog
+            question.setText( "Note: Some questions are not answered!  \n Do you still want to submit this quiz?" );
+
+        }
+
+        dialogBuilder.setView(viewPopUp);
+        dialog = dialogBuilder.create();
+        dialog.show();
+        dlg_btn_yes.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendAnswers(answerStr);
+                dialog.dismiss();
+                QuizSubmitedDialog();
+            }
+        } );
+        dlg_btn_no.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
                 dialog.dismiss();
             }
-        });
+        } );
+
     }
+
+    private void QuizSubmitedDialog() {
+        AlertDialog.Builder DialogBuilder = new AlertDialog.Builder(this);
+        final View viewPopUp = LayoutInflater.from(this)
+                .inflate(R.layout.dlg_quiz_submited_student, null);
+
+        Button dlg_btn_ok = (Button)viewPopUp.findViewById( R.id.Ok_quiz_submitted);
+        DialogBuilder.setView(viewPopUp);
+        AlertDialog DialoG = DialogBuilder.create();
+        DialoG.show();
+
+        dlg_btn_ok.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),activity_browse_quizes_student.class);
+                startActivity( i );
+            }
+        } );
+    }
+
+    private void sendAnswers(String Answer) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/addAttempt.php").newBuilder();
+        urlBuilder.addQueryParameter("attemptQuiz", Integer.toString(QUIZ.ID));
+        urlBuilder.addQueryParameter("attemptStudent", USER.USERNAME);
+        urlBuilder.addQueryParameter("attemptAnswers", Answer);
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            @Generated
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            @Generated
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+                if(response.isSuccessful()){
+                    activity_attempt_quiz.this.runOnUiThread( new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    } );
+                }
+            }
+        });
+
+    }
+
 
 
     //This method will get Data from the web api
@@ -201,6 +324,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
             listQuestions.add(question);
             adapter.notifyDataSetChanged();
 
+
         }
     }
     //This method will check if the recyclerview has reached the bottom or not
@@ -216,6 +340,8 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
     @Override
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+
         if (isLastItemDistplaying(recyclerView)) {
             //Calling the method getData again
             getData();

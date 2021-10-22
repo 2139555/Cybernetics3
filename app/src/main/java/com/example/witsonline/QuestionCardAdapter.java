@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         this.context = context;
     }
 
+
     @NonNull
     @Override
     @Generated
@@ -84,42 +86,97 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     @Generated
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //Getting the particular item from the list
-        final QuestionV question= questions.get(position);
 
-        holder.question.setText(questions.get(position).getQuestionText());
-        holder.answerOption1.setText(question.getAnswerOption1());
-        holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
-        holder.answerOption2.setText(question.getAnswerOption2());
-        holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
-        holder.answerOption3.setText(question.getAnswerOption3());
-        holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
-        holder.answerOption4.setText(question.getAnswerOption4());
-        holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
-        holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
-        String[] questNo = question.getQuestionID().split("-");
-        holder.questionNo.setText(questNo[1] + ".");
-        if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption1.setChecked(true);
-            holder.checkedID.setText("1");
+        final QuestionV question = questions.get(position);
+
+        if(!USER.STUDENT){
+
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+            if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption1.setChecked(true);
+                holder.checkedID.setText("1");
+            }
+            else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption2.setChecked(true);
+                holder.checkedID.setText("2");
+            }
+            else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
+                holder.answerOption3.setChecked(true);
+                holder.checkedID.setText("3");
+            }
+            else{
+                holder.answerOption4.setChecked(true);
+                holder.checkedID.setText("4");
+            }
         }
-        else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption2.setChecked(true);
-            holder.checkedID.setText("2");
+        else {
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+            holder.answerOption1.setChecked( false );
+            holder.answerOption2.setChecked( false );
+            holder.answerOption3.setChecked( false );
+            holder.answerOption4.setChecked( false );
+
+            holder.rgAnswerOptions.setOnCheckedChangeListener( new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    int radioButtonID = group.getCheckedRadioButtonId();
+                    View radioButton = group.findViewById(radioButtonID);
+                    if(radioButton.getId() == holder.answerOption1.getId()){
+                        holder.answerOption1.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption2.getId()){
+                        holder.answerOption2.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption3.getId()){
+                        holder.answerOption3.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption4.getId()){
+                        holder.answerOption4.setChecked( true );
+                    }
+                }
+            } );
+
+
         }
-        else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
-            holder.answerOption3.setChecked(true);
-            holder.checkedID.setText("3");
-        }
-        else{
-            holder.answerOption4.setChecked(true);
-            holder.checkedID.setText("4");
-        }
+
+
+
+
     }
+
 
     @Override
     @Generated
     public int getItemCount() {
         return questions.size();
+    }
+    public ArrayList<QuestionV> getAll(){
+        return questions;
     }
 
     @Generated
@@ -138,6 +195,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         public TextView answer2ID;
         public TextView answer3ID;
         public TextView answer4ID;
+        String ans = "";
+        SparseBooleanArray checkedItems = new SparseBooleanArray();
+
 
         //Initializing Views
         public ViewHolder(View itemView) {
@@ -151,6 +211,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             answerOption2 = (RadioButton) itemView.findViewById(R.id.option2);
             answerOption3 = (RadioButton) itemView.findViewById(R.id.option3);
             answerOption4 = (RadioButton) itemView.findViewById(R.id.option4);
+
             answer1ID = (TextView) itemView.findViewById(R.id.Answer1ID);
             answer2ID = (TextView) itemView.findViewById(R.id.Answer2ID);
             answer3ID = (TextView) itemView.findViewById(R.id.Answer3ID);
@@ -169,6 +230,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             }
 
 
+
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 @Generated
@@ -185,10 +249,67 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
                 }
             });
+            answerOption1.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("1");
+                            answerOption1.setChecked( true );
+                            Quest.setOpt1_selected( true );
+                        }
+                    }
+
+                }
+            } );
+            answerOption2.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("2");
+                            answerOption2.setChecked( true );
+                            Quest.setOpt2_selected( true );
+                        }
+                    }
+                }
+            } );
+            answerOption3.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("3");
+                            answerOption3.setChecked( true );
+                            Quest.setOpt3_selected( true );
+                        }
+                    }
+                }
+            } );
+            answerOption4.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("4");
+                            answerOption4.setChecked( true );
+                            Quest.setOpt4_selected( true );
+                        }
+                    }
+                }
+            } );
+
 
         }
     }
+    public int getItemViewType(int position) {
+        return position;
+    }
 
+    public ArrayList<QuestionV> getSelected(){
+        ArrayList<QuestionV> selected = new ArrayList<>();
+        return selected;
+    }
     @Generated
     public void createNewQuestionDialog(RadioButton answer1, RadioButton answer2,RadioButton answer3,RadioButton answer4, TextView questionText,
                                         TextView questionMarks, TextView questionNo, String correctAns, String a1ID, String a2ID,

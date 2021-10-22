@@ -263,7 +263,7 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                 Intent intent = new Intent(CourseHomePage.this, BrowseLessons.class);
                 intent.putExtra("activity","student");
                 startActivity(intent);
-            //    finish();
+                //    finish();
             }
         });
 
@@ -596,7 +596,7 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                             MenuItem item = courseMenu.findItem(R.id.menu_quizzes);
                             item.setVisible(false);
                             subscribe.setText("SUBSCRIBE");
-                           // btnUnsubscribe.setText("SUBSCRIBE");
+                            // btnUnsubscribe.setText("SUBSCRIBE");
                         }
                         //Hiding the progressBar
                         relativeLayout.setVisibility(View.VISIBLE);
@@ -924,9 +924,9 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
-       MenuInflater inflater = getMenuInflater();
-       inflater.inflate( R.menu.menu_tutor,menu);
-       courseMenu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.menu_tutor,menu);
+        courseMenu = menu;
 
 
 
@@ -938,31 +938,31 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         if (item.getItemId() == R.id.menu_quizzes){
-                intent = new Intent(CourseHomePage.this, activity_browse_quizes_student.class);
-                if(browse){
-                    intent.putExtra("activity",""+BrowseCourses.class);
-                }
-                else if(mycourses){
-                    intent.putExtra("activity",""+MyCourses.class);
-                }
-                else{
-                    intent.putExtra("activity",""+Dashboard.class);
-                }
-                startActivity(intent);
+            intent = new Intent(CourseHomePage.this, activity_browse_quizes_student.class);
+            if(browse){
+                intent.putExtra("activity",""+BrowseCourses.class);
+            }
+            else if(mycourses){
+                intent.putExtra("activity",""+MyCourses.class);
+            }
+            else{
+                intent.putExtra("activity",""+Dashboard.class);
+            }
+            startActivity(intent);
         }
 
         else if(item.getItemId() == R.id.menu_view_requests){
-                 intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
-                if(browse){
-                    intent.putExtra("activity",""+BrowseCourses.class);
-                }
-                else if(mycourses){
-                    intent.putExtra("activity",""+MyCourses.class);
-                }
-                else{
-                    intent.putExtra("activity",""+Dashboard.class);
-                }
-                startActivity(intent);
+            intent = new Intent(CourseHomePage.this, EnrolmentRequests.class);
+            if(browse){
+                intent.putExtra("activity",""+BrowseCourses.class);
+            }
+            else if(mycourses){
+                intent.putExtra("activity",""+MyCourses.class);
+            }
+            else{
+                intent.putExtra("activity",""+Dashboard.class);
+            }
+            startActivity(intent);
 
 
         }

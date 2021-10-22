@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import okhttp3.Response;
 
 public class activity_browse_quizes_student extends AppCompatActivity implements View.OnScrollChangeListener {
     private TextView course;
+    private Button submit;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -80,8 +82,8 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
         recyclerView.setAdapter(adapter);
 
 
-
     }
+
 
 
     private void parseData(String array) throws JSONException {

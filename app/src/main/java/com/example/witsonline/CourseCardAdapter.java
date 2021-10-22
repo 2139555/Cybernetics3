@@ -64,6 +64,7 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
 
     //for cancelling enrolment request
     private Button btnCancelReqDB, btnCancelCancelRequest;
+    private boolean EnrolmentP_Granted = false;
 
 
     //Constructor of this class
@@ -372,16 +373,25 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
             @Generated
             public void onClick(View v) {
                 //INSTRUCTOR.USERNAME = instUsernames.get(courseCode.getText());
-
+                try {
+                    checkIfPermissionGranted();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 dialog.dismiss();
                 Intent i = new Intent(context, CourseHomePage.class);
                 i.putExtra("activity", "" + context);
                 i.putExtra("username", instUsernames.get(courseCode.getText()));
+                i.putExtra("tutorstate", tutor);
+                i.putExtra( "Permission", EnrolmentP_Granted );
                 context.startActivity(i);
             }
         });
 
     }
+
+
+
 
     @Generated
     public void createNewCancelRequestDialog() {
@@ -641,6 +651,56 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
 
         }
 
+    }
+    private void checkIfPermissionGranted() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/getPermissionState.php").newBuilder();
+        urlBuilder.addQueryParameter("courseCode", COURSE.CODE);
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            @Generated
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            @Generated
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                final String responseData = response.body().string();
+
+                if(response.isSuccessful()){
+                    try {
+                        JSONArray all = new JSONArray(responseData);
+                        for (int i = 0; i < all.length();i++){
+                            JSONObject obj = all.getJSONObject(i);
+                            //Adding data to the course object
+                            int requestPermissionState = obj.getInt("Enrolment_Request_Permission");
+                            //Toast.makeText(this, ""+tutorState, Toast.LENGTH_LONG).show();
+
+                            if (requestPermissionState == 1){
+                                //if permission to accept and decline requests is granted by instructor
+                                EnrolmentP_Granted = true;
+                                //Toast toast = Toast.makeText(CourseHomePage.this, "permission granted", Toast.LENGTH_LONG);
+                                //toast.show();
+                            }
+
+                        }
+
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
 

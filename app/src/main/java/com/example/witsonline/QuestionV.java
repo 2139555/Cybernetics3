@@ -14,6 +14,56 @@ public class QuestionV{
     private int answerOption2ID;
     private int answerOption3ID;
     private int answerOption4ID;
+    boolean opt1_selected = false;
+    boolean opt2_selected = false;
+    boolean opt3_selected = false;
+    boolean opt4_selected = false;
+    private String Selected_ans = "";
+
+    public boolean isOpt1_selected() {
+        return opt1_selected;
+    }
+
+    public void setOpt1_selected(boolean opt1_selected) {
+        this.opt1_selected = opt1_selected;
+    }
+
+    public boolean isOpt2_selected() {
+        return opt2_selected;
+    }
+
+    public void setOpt2_selected(boolean opt2_selected) {
+        this.opt2_selected = opt2_selected;
+    }
+
+    public boolean isOpt3_selected() {
+        return opt3_selected;
+    }
+
+    public void setOpt3_selected(boolean opt3_selected) {
+        this.opt3_selected = opt3_selected;
+    }
+
+    public boolean isOpt4_selected() {
+        return opt4_selected;
+    }
+
+    public void setOpt4_selected(boolean opt4_selected) {
+        this.opt4_selected = opt4_selected;
+    }
+
+
+
+
+    public String getSelcted_ans() {
+        return Selected_ans;
+    }
+
+    public void setSelcted_ans(String selcted_ans) {
+        Selected_ans = selcted_ans;
+    }
+
+
 
 
     //Setters

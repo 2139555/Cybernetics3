@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         this.context = context;
     }
 
+
     @NonNull
     @Override
     @Generated
@@ -86,6 +88,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         //Getting the particular item from the list
 
         final QuestionV question = questions.get(position);
+
         if(!USER.STUDENT){
 
             holder.question.setText(questions.get(position).getQuestionText());
@@ -115,7 +118,6 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             else{
                 holder.answerOption4.setChecked(true);
                 holder.checkedID.setText("4");
-
             }
         }
         else {
@@ -131,7 +133,37 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
             String[] questNo = question.getQuestionID().split("-");
             holder.questionNo.setText(questNo[1] + ".");
+            holder.answerOption1.setChecked( false );
+            holder.answerOption2.setChecked( false );
+            holder.answerOption3.setChecked( false );
+            holder.answerOption4.setChecked( false );
+
+            holder.rgAnswerOptions.setOnCheckedChangeListener( new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    int radioButtonID = group.getCheckedRadioButtonId();
+                    View radioButton = group.findViewById(radioButtonID);
+                    if(radioButton.getId() == holder.answerOption1.getId()){
+                        holder.answerOption1.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption2.getId()){
+                        holder.answerOption2.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption3.getId()){
+                        holder.answerOption3.setChecked( true );
+
+                    }
+                    if(radioButton.getId() == holder.answerOption4.getId()){
+                        holder.answerOption4.setChecked( true );
+                    }
+                }
+            } );
+
+
         }
+
 
 
 
@@ -142,6 +174,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     @Generated
     public int getItemCount() {
         return questions.size();
+    }
+    public ArrayList<QuestionV> getAll(){
+        return questions;
     }
 
     @Generated
@@ -160,6 +195,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         public TextView answer2ID;
         public TextView answer3ID;
         public TextView answer4ID;
+        String ans = "";
+        SparseBooleanArray checkedItems = new SparseBooleanArray();
+
 
         //Initializing Views
         public ViewHolder(View itemView) {
@@ -173,6 +211,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             answerOption2 = (RadioButton) itemView.findViewById(R.id.option2);
             answerOption3 = (RadioButton) itemView.findViewById(R.id.option3);
             answerOption4 = (RadioButton) itemView.findViewById(R.id.option4);
+
             answer1ID = (TextView) itemView.findViewById(R.id.Answer1ID);
             answer2ID = (TextView) itemView.findViewById(R.id.Answer2ID);
             answer3ID = (TextView) itemView.findViewById(R.id.Answer3ID);
@@ -189,9 +228,9 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 answerOption4.setEnabled(false);
                 answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
             }
-            else{
-                rgAnswerOptions.clearCheck();
-            }
+
+
+
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -210,10 +249,67 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
                 }
             });
+            answerOption1.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("1");
+                            answerOption1.setChecked( true );
+                            Quest.setOpt1_selected( true );
+                        }
+                    }
+
+                }
+            } );
+            answerOption2.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("2");
+                            answerOption2.setChecked( true );
+                            Quest.setOpt2_selected( true );
+                        }
+                    }
+                }
+            } );
+            answerOption3.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("3");
+                            answerOption3.setChecked( true );
+                            Quest.setOpt3_selected( true );
+                        }
+                    }
+                }
+            } );
+            answerOption4.setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for(QuestionV Quest:questions ){
+                        if(Quest.getQuestionText().equals( question.getText() )){
+                            Quest.setSelcted_ans("4");
+                            answerOption4.setChecked( true );
+                            Quest.setOpt4_selected( true );
+                        }
+                    }
+                }
+            } );
+
 
         }
     }
+    public int getItemViewType(int position) {
+        return position;
+    }
 
+    public ArrayList<QuestionV> getSelected(){
+        ArrayList<QuestionV> selected = new ArrayList<>();
+        return selected;
+    }
     @Generated
     public void createNewQuestionDialog(RadioButton answer1, RadioButton answer2,RadioButton answer3,RadioButton answer4, TextView questionText,
                                         TextView questionMarks, TextView questionNo, String correctAns, String a1ID, String a2ID,

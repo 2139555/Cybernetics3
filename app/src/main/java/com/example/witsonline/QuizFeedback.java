@@ -27,16 +27,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class QuizFeedback extends AppCompatActivity implements View.OnScrollChangeListener {
-    Button Done;
     TextView QuizTopic;
     TextView QuizScore;
     RecyclerView recyclerView;
-
-    //for getting marks
-    String total;
-    String markObtained;
-    int intTotal = 0;
-    int intMarkObtained = 0;
 
     //Volley Request Queue
     private RequestQueue requestQueue;
@@ -44,25 +37,16 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
 
     //Questions recyclerView
     private RecyclerView.LayoutManager layoutManager;
-    private RecyclerView.Adapter adapter;
 
+    private QuestionCardAdapter adapter;
     private ArrayList<QuestionV> listQuestions;
+
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
-    String getQuizURL = "https://lamp.ms.wits.ac.za/home/s2105624/getQuizes_student.php?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_feedback);
-
-        Done = (Button)findViewById( R.id.btnDoneQuizFeedback );
-        Done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(QuizFeedback.this,activity_browse_quizes_student.class);
-                startActivity(intent);
-            }
-        });
 
         QuizTopic = (TextView)findViewById( R.id.quiz_feedback_topic);
         QuizScore = (TextView)findViewById( R.id.marks);
@@ -101,7 +85,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
 
     private JsonArrayRequest getDataFromServer(int requestCount){
         //Initializing progressbar
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.questionProgressBar_AttemptQuiz);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.quizFeedbackProgressBar);
 
         //Displaying ProgressBar
         progressBar.setVisibility( View.VISIBLE);
@@ -133,6 +117,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
     //This method will parse json Data
     @Generated
     private void parseData(JSONArray array) throws JSONException {
+
         for (int i = 0; i< array.length(); i++) {
             // Creating the Course object
             QuestionV question = new QuestionV();
@@ -161,10 +146,8 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             listQuestions.add(question);
             adapter.notifyDataSetChanged();
-
         }
     }
     //This method will check if the recyclerview has reached the bottom or not
@@ -184,11 +167,5 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
             //Calling the method getData again
             getData();
         }
-    }
-
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(QuizFeedback.this,activity_browse_quizes_student.class);
-        startActivity(intent);
     }
 }

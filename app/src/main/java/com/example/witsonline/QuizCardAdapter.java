@@ -192,7 +192,8 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 }
                 else{
                     //view quiz feedback
-                    Toast.makeText(context, "add quiz feedback intent here", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context,QuizFeedback.class);
+                    context.startActivity(intent);
                     dialog.dismiss();
                 }
             }

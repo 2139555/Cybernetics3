@@ -138,9 +138,9 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
                 question.setQuestionMarkAlloc(json.getInt("questionMark"));
 
                 question.setAnswerOption1(json.getString("0"));
-                question.setAnswerOption2(json.getString("1"));
-                question.setAnswerOption3(json.getString("2"));
-                question.setAnswerOption4(json.getString("3"));
+                question.setAnswerOption2(json.getString("2"));
+                question.setAnswerOption3(json.getString("4"));
+                question.setAnswerOption4(json.getString("6"));
 
 
             } catch (JSONException e) {

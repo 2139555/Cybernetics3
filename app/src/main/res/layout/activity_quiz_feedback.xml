@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="10 out of 15 points"
+            android:gravity="center_horizontal"
             android:textSize="24sp"
             android:layout_marginTop="20dp"
             android:layout_marginStart="10dp"/>

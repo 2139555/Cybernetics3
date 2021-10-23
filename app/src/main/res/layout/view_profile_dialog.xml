@@ -8,12 +8,13 @@
     android:textSize="25dp">
 
     <TextView
+        android:id="@+id/viewProfileQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textStyle="bold"
         android:layout_gravity="center"
-        android:text="Do you want to view this user's profile?"/>
+        android:padding="10dp"
+        android:text="Do you want to view this user's profile?"
+        android:textStyle="bold" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,27 +23,33 @@
 
 
         <Button
+            android:id="@+id/btnView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnView"
-            android:text="VIEW"
-            android:padding="10dp"
-            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:background="@color/color1"
-            android:textColor="@color/white"
-            android:layout_gravity="center"/>
+            android:padding="10dp"
+            android:text="VIEW"
+            android:textColor="@color/white" />
 
         <Button
+            android:id="@+id/btnViewCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnViewCancel"
-            android:text="CANCEL"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
-            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:background="@color/color1"
-            android:textColor="@color/white"
-            android:layout_gravity="center"/>
+            android:padding="10dp"
+            android:text="CANCEL"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
 

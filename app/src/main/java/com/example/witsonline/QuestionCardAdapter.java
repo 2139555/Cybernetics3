@@ -89,7 +89,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         final QuestionV question = questions.get(position);
 
-        if(!USER.STUDENT){
+        if (!USER.STUDENT) {
 
             holder.question.setText(questions.get(position).getQuestionText());
             holder.answerOption1.setText(question.getAnswerOption1());
@@ -103,24 +103,20 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
             String[] questNo = question.getQuestionID().split("-");
             holder.questionNo.setText(questNo[1] + ".");
-            if(holder.answerOption1.getText().toString().equals(question.getCorrectOption())){
+            if (holder.answerOption1.getText().toString().equals(question.getCorrectOption())) {
                 holder.answerOption1.setChecked(true);
                 holder.checkedID.setText("1");
-            }
-            else if(holder.answerOption2.getText().toString().equals(question.getCorrectOption())){
+            } else if (holder.answerOption2.getText().toString().equals(question.getCorrectOption())) {
                 holder.answerOption2.setChecked(true);
                 holder.checkedID.setText("2");
-            }
-            else if(holder.answerOption3.getText().toString().equals(question.getCorrectOption())){
+            } else if (holder.answerOption3.getText().toString().equals(question.getCorrectOption())) {
                 holder.answerOption3.setChecked(true);
                 holder.checkedID.setText("3");
-            }
-            else{
+            } else {
                 holder.answerOption4.setChecked(true);
                 holder.checkedID.setText("4");
             }
-        }
-        else {
+        } else {
             holder.question.setText(questions.get(position).getQuestionText());
             holder.answerOption1.setText(question.getAnswerOption1());
             holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
@@ -133,42 +129,36 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
             String[] questNo = question.getQuestionID().split("-");
             holder.questionNo.setText(questNo[1] + ".");
-            holder.answerOption1.setChecked( false );
-            holder.answerOption2.setChecked( false );
-            holder.answerOption3.setChecked( false );
-            holder.answerOption4.setChecked( false );
+            holder.answerOption1.setChecked(false);
+            holder.answerOption2.setChecked(false);
+            holder.answerOption3.setChecked(false);
+            holder.answerOption4.setChecked(false);
 
-            holder.rgAnswerOptions.setOnCheckedChangeListener( new RadioGroup.OnCheckedChangeListener() {
+            holder.rgAnswerOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     int radioButtonID = group.getCheckedRadioButtonId();
                     View radioButton = group.findViewById(radioButtonID);
-                    if(radioButton.getId() == holder.answerOption1.getId()){
-                        holder.answerOption1.setChecked( true );
+                    if (radioButton.getId() == holder.answerOption1.getId()) {
+                        holder.answerOption1.setChecked(true);
 
                     }
-                    if(radioButton.getId() == holder.answerOption2.getId()){
-                        holder.answerOption2.setChecked( true );
+                    if (radioButton.getId() == holder.answerOption2.getId()) {
+                        holder.answerOption2.setChecked(true);
 
                     }
-                    if(radioButton.getId() == holder.answerOption3.getId()){
-                        holder.answerOption3.setChecked( true );
+                    if (radioButton.getId() == holder.answerOption3.getId()) {
+                        holder.answerOption3.setChecked(true);
 
                     }
-                    if(radioButton.getId() == holder.answerOption4.getId()){
-                        holder.answerOption4.setChecked( true );
+                    if (radioButton.getId() == holder.answerOption4.getId()) {
+                        holder.answerOption4.setChecked(true);
                     }
                 }
-            } );
-
-
+            });
         }
 
-
-
-
     }
-
 
     @Override
     @Generated
@@ -178,6 +168,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public ArrayList<QuestionV> getAll(){
         return questions;
     }
+
 
     @Generated
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -415,8 +406,8 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     String mark = markAlloc.getEditText().getText().toString();
 
                     try {
-                       // Toast.makeText(context,QUIZ.ID+"-"+qnum, Toast.LENGTH_LONG).show();
-                      //  Toast.makeText(context,QUIZ.ID+"-"+qno, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(context,QUIZ.ID+"-"+qnum, Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(context,QUIZ.ID+"-"+qno, Toast.LENGTH_LONG).show();
                         updateQuestion("updateQuestion.php",quest,ans1,ans2,ans3,ans4,correctAnswer,mark,qno,a1ID,a2ID,a3ID,a4ID);
                         dialog.dismiss();
                     } catch (IOException e) {
@@ -524,7 +515,4 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         }
         return invalid;
     }
-
-
-
 }

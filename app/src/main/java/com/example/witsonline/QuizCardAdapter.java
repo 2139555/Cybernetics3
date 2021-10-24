@@ -23,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -53,11 +52,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
     private ProgressBar progressBar;
     private Button btnAttempt, btnCancel;
     private TextView attemptText;
-    private Button dialogCreateQuiz;
-    private Button cancel;
-    private Button dialogEditQuiz;
-    private Button dialogViewQuiz;
-    private TextInputLayout dialogQuizName;
+
 
     //Constructor of this class
     public QuizCardAdapter(ArrayList<QuizV> quizVs, Context context) {
@@ -154,7 +149,8 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                         //context.startActivity(i);
                     }
                     else{
-                        editViewQuizDialog();
+                        Intent i = new Intent(context,BrowseQuizQuestions.class);
+                        context.startActivity(i);
                     }
 
                 }
@@ -262,120 +258,4 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
         });
     }
 
-    public void editQuizDialog() {
-        androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        final View viewPopUp = LayoutInflater.from(context)
-                .inflate(R.layout.create_quiz_dialog, null);
-
-        dialogBuilder.setView(viewPopUp);
-        androidx.appcompat.app.AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-
-        dialogCreateQuiz = (Button) viewPopUp.findViewById(R.id.dialogCreateQuiz);
-        dialogCreateQuiz.setText("EDIT");
-        cancel = (Button) viewPopUp.findViewById(R.id.cancelQuizCreation);
-        dialogQuizName = (TextInputLayout) viewPopUp.findViewById(R.id.dialogQuizName);
-        dialogQuizName.getEditText().setText(QUIZ.NAME);
-
-        dialogCreateQuiz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @Generated
-            public void onClick(View v) {
-                String quizName = dialogQuizName.getEditText().getText().toString().trim();
-                if (quizName.isEmpty()){
-                    dialogQuizName.setError("Quiz name can't be empty");
-                }
-                else{
-                    dialogQuizName.setError(null);
-                    try {
-                        editQuiz("updateQuizName.php",dialogQuizName.getEditText().getText().toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    public void editViewQuizDialog() {
-        androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        final View viewPopUp = LayoutInflater.from(context)
-                .inflate(R.layout.view_edit_quiz_dialog, null);
-
-        dialogBuilder.setView(viewPopUp);
-        androidx.appcompat.app.AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
-
-        dialogEditQuiz = (Button) viewPopUp.findViewById(R.id.editQuiz);
-        dialogViewQuiz = (Button) viewPopUp.findViewById(R.id.viewQuiz);
-
-        dialogEditQuiz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            @Generated
-            public void onClick(View v) {
-                editQuizDialog();
-                dialog.dismiss();
-            }
-        });
-
-        dialogViewQuiz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(context,BrowseQuizQuestions.class);
-                context.startActivity(i);
-                dialog.dismiss();
-            }
-        });
-    }
-   @Generated
-    private void editQuiz (String editQuizPHP, String quizName) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + editQuizPHP).newBuilder();
-        urlBuilder.addQueryParameter("quizID", Integer.toString(QUIZ.ID));
-        urlBuilder.addQueryParameter("quizName", quizName);
-        String url = urlBuilder.build().toString();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            private Activity cont = (Activity) context;
-            @Override
-            @Generated
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            @Generated
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                final String responseData = response.body().string();
-                cont.runOnUiThread(new Runnable() {
-                    @Override
-                    @Generated
-                    public void run() {
-                        Log.d("HERE",responseData.toString());
-                        if(responseData.trim().equals("Successful")) {
-                            Toast toast = Toast.makeText(context,"Successful", Toast.LENGTH_LONG);
-                            toast.show();
-                            Intent intent = new Intent(context, QuizActivity.class);
-                            context.startActivity(intent);
-                        }
-                        else{
-                            Toast toast = Toast.makeText(context, "Couldn't edit your quiz ", Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                    }
-                });
-            }
-        });
-    }
 }

@@ -29,26 +29,14 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnDoneQuizFeedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@color/color3"
-            android:padding="10dp"
-            android:text="Done"
-            android:textColor="@color/white" />
-
         <TextView
             android:id="@+id/marks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="10 out of 15 points"
+            android:gravity="center_horizontal"
             android:textSize="24sp"
+            android:layout_marginTop="20dp"
             android:layout_marginStart="10dp"/>
 
         <RelativeLayout
@@ -66,7 +54,7 @@
                 android:paddingStart="10dp" />
 
             <ProgressBar
-                android:id="@+id/questionProgressBar_AttemptQuiz"
+                android:id="@+id/quizFeedbackProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="185dp"

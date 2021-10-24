@@ -14,7 +14,7 @@
         android:padding="10dp"
         android:textStyle="bold"
         android:layout_gravity="center"
-        android:text="What do you whant to do?"/>
+        android:text="What do you want to do?"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -3,7 +3,9 @@ package com.example.witsonline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -21,13 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,9 +68,12 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     private Spinner spinner;
     private int correctAnswer;
 
+    //for getting feedback
+    private RequestQueue requestQueue;
+    String Answers="";
+    String getAnswersURL="https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number="+STUDENT.number+"&quizID="+QUIZ.ID;
 
     private ProgressBar progressBarReq;
-
 
     //Constructor of this class
     public QuestionCardAdapter(ArrayList<QuestionV> questions, Context context) {
@@ -82,12 +95,74 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         return viewHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     @Generated
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //Getting the particular item from the list
 
         final QuestionV question = questions.get(position);
+        requestQueue = Volley.newRequestQueue(context);
+        getAnswers();
+
+        String strContext = context.toString();
+        if(strContext.contains("QuizFeedback")){
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]
+                            {
+                                    new int[]{-android.R.attr.state_enabled}, // Disabled
+                                    new int[]{android.R.attr.state_enabled}   // Enabled
+                            },
+                    new int[]
+                            {
+                                    Color.RED, // disabled
+                                    Color.GREEN   // enabled
+                            }
+            );
+
+            holder.answerOption1.setClickable(false);
+            holder.answerOption2.setClickable(false);
+            holder.answerOption3.setClickable(false);
+            holder.answerOption4.setClickable(false);
+
+            holder.answerOption1.setChecked(false);
+            holder.answerOption2.setChecked(false);
+            holder.answerOption3.setChecked(false);
+            holder.answerOption4.setChecked(false);
+
+            holder.question.setText(questions.get(position).getQuestionText());
+            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
+            holder.answerOption2.setText(question.getAnswerOption2());
+            holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
+            holder.answerOption3.setText(question.getAnswerOption3());
+            holder.answer3ID.setText(Integer.toString(question.getAnswerOption3ID()));
+            holder.answerOption4.setText(question.getAnswerOption4());
+            holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
+            holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+
+            if (holder.answerOption1.getText().toString().equals(question.getCorrectOption())) {
+                holder.answerOption1.setButtonTintList(colorStateList);
+                holder.answerOption1.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
+                holder.checkedID.setText("1");
+            }
+            else if (holder.answerOption2.getText().toString().equals(question.getCorrectOption())) {
+                holder.answerOption2.setButtonTintList(colorStateList);
+                holder.answerOption2.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
+                holder.checkedID.setText("2");
+            }
+            else if (holder.answerOption3.getText().toString().equals(question.getCorrectOption())) {
+                holder.answerOption3.setButtonTintList(colorStateList);
+                holder.answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
+                holder.checkedID.setText("3");
+            }
+            else {
+                holder.checkedID.setText("4");
+                holder.answerOption4.setButtonTintList(colorStateList);
+                holder.answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
+            }
+
+        }
 
         if (!USER.STUDENT) {
 
@@ -156,6 +231,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     }
                 }
             });
+
         }
 
     }
@@ -168,7 +244,6 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public ArrayList<QuestionV> getAll(){
         return questions;
     }
-
 
     @Generated
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -219,10 +294,6 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 answerOption4.setEnabled(false);
                 answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
             }
-
-
-
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -293,6 +364,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         }
     }
+
     public int getItemViewType(int position) {
         return position;
     }
@@ -514,5 +586,51 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             }
         }
         return invalid;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Generated
+    private void getAnswers() {
+        //Adding the method to the queue by calling the method getTagData
+        requestQueue.add(getAnswersFromServer());
+        Log.d("yyyyyyyyyyyyyyyyyyyyyyyyy",Answers);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Generated
+    private JsonArrayRequest getAnswersFromServer() {
+        //JsonArrayRequest of volley
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getAnswersURL + STUDENT.number,
+                (response) -> {
+                    //Calling method parseData to parse the json response
+                    parseAnswerData(response);
+                    //Hiding the progressBar
+                },
+                (error) -> {
+                    //If an error occurs that means user was not found or does not exist
+                    Toast.makeText(context, "Student's answers were not found", Toast.LENGTH_SHORT).show();
+                });
+        //Returning the request
+        return jsonArrayRequest;
+    }
+
+    //This method will parse json Data
+    @Generated
+    private void parseAnswerData(JSONArray array) {
+        for (int i = 0; i < array.length(); i++) {
+
+            JSONObject json = null;
+            try {
+                //Getting json
+                json = array.getJSONObject(i);
+
+                //getting Answers from Quiz Attempts
+                Answers = json.getString("Attempt_Answers");
+                Log.d("Taggggggg",Answers);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

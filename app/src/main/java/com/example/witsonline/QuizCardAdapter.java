@@ -146,6 +146,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 public void onClick(View view) {
                     QUIZ.ID = Integer.parseInt(quizID.getText().toString());
                     QUIZ.NAME = quizName.getText().toString();
+                    QUIZ.MARK_ALLOC = quizMarkAlloc.getText().toString();
                     QUIZ.VISIBILITY = Integer.parseInt(quizVisibility.getText().toString());
 
                     if(USER.STUDENT){
@@ -196,7 +197,8 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 }
                 else{
                     //view quiz feedback
-                    Toast.makeText(context, "add quiz feedback intent here", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context,QuizFeedback.class);
+                    context.startActivity(intent);
                     dialog.dismiss();
                 }
             }

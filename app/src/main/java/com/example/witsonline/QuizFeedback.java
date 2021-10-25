@@ -52,7 +52,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
         QuizScore = (TextView)findViewById( R.id.marks);
 
         //setting marks
-        QuizScore.setText("x out of " + QUIZ.MARK_ALLOC + " points");
+        QuizScore.setText("x out of " + QUIZ.MARK_ALLOC);
 
         recyclerView = (RecyclerView) findViewById(R.id.feedbackRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -127,8 +127,6 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
                 json = array.getJSONObject(i);
 
                 /*/calculating marks
-                intTotal = intTotal + Integer.parseInt(json.getString("questionMark"));
-                total = String.valueOf(intTotal);
                 intMarkObtained = intMarkObtained + Integer.parseInt(json.getString("questionMark"));
                 markObtained = String.valueOf(intMarkObtained);*/
 
@@ -141,7 +139,6 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
                 question.setAnswerOption2(json.getString("2"));
                 question.setAnswerOption3(json.getString("4"));
                 question.setAnswerOption4(json.getString("6"));
-
 
             } catch (JSONException e) {
                 e.printStackTrace();

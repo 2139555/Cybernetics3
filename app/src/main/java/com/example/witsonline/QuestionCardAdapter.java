@@ -70,8 +70,10 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
     //for getting feedback
     private RequestQueue requestQueue;
-    String Answers="";
-    String getAnswersURL="https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number="+STUDENT.number+"&quizID="+QUIZ.ID;
+    String Answers = "";
+    String getAnswersURL="https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number=";
+    int iterator = -1;
+    int answer = 0;
 
     private ProgressBar progressBarReq;
 
@@ -106,6 +108,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         getAnswers();
 
         String strContext = context.toString();
+
         if(strContext.contains("QuizFeedback")){
             ColorStateList colorStateList = new ColorStateList(
                     new int[][]
@@ -141,6 +144,16 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
             holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
 
+            String[] questNo = question.getQuestionID().split("-");
+            holder.questionNo.setText(questNo[1] + ".");
+
+
+            /*iterator = iterator + Integer.parseInt(questNo[1]);
+            answer = Character.getNumericValue(Answers.charAt(iterator));
+            if(answer == 2){
+                holder.answerOption1.setChecked(true);
+            }*/
+
             if (holder.answerOption1.getText().toString().equals(question.getCorrectOption())) {
                 holder.answerOption1.setButtonTintList(colorStateList);
                 holder.answerOption1.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
@@ -157,14 +170,13 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 holder.checkedID.setText("3");
             }
             else {
-                holder.checkedID.setText("4");
                 holder.answerOption4.setButtonTintList(colorStateList);
                 holder.answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
+                holder.checkedID.setText("4");
             }
 
         }
-
-        if (!USER.STUDENT) {
+        else if (!USER.STUDENT) {
 
             holder.question.setText(questions.get(position).getQuestionText());
             holder.answerOption1.setText(question.getAnswerOption1());
@@ -176,8 +188,10 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             holder.answerOption4.setText(question.getAnswerOption4());
             holder.answer4ID.setText(Integer.toString(question.getAnswerOption4ID()));
             holder.questionMarks.setText("(" + question.getQuestionMarkAlloc() + ")");
+
             String[] questNo = question.getQuestionID().split("-");
             holder.questionNo.setText(questNo[1] + ".");
+
             if (holder.answerOption1.getText().toString().equals(question.getCorrectOption())) {
                 holder.answerOption1.setChecked(true);
                 holder.checkedID.setText("1");
@@ -191,9 +205,10 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 holder.answerOption4.setChecked(true);
                 holder.checkedID.setText("4");
             }
-        } else {
+        }
+        else {
             holder.question.setText(questions.get(position).getQuestionText());
-            holder.answerOption1.setText(question.getAnswerOption1());
+            holder.answerOption1.setText(question.getAnswerOption2());
             holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
             holder.answerOption2.setText(question.getAnswerOption2());
             holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
@@ -231,9 +246,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     }
                 }
             });
-
         }
-
     }
 
     @Override
@@ -593,14 +606,13 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     private void getAnswers() {
         //Adding the method to the queue by calling the method getTagData
         requestQueue.add(getAnswersFromServer());
-        Log.d("yyyyyyyyyyyyyyyyyyyyyyyyy",Answers);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Generated
     private JsonArrayRequest getAnswersFromServer() {
         //JsonArrayRequest of volley
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getAnswersURL + STUDENT.number,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getAnswersURL + USER.USER_NUM + "&quizID=" + QUIZ.ID,
                 (response) -> {
                     //Calling method parseData to parse the json response
                     parseAnswerData(response);
@@ -626,7 +638,6 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
                 //getting Answers from Quiz Attempts
                 Answers = json.getString("Attempt_Answers");
-                Log.d("Taggggggg",Answers);
 
             } catch (JSONException e) {
                 e.printStackTrace();

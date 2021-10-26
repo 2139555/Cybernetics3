@@ -148,6 +148,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                     QUIZ.NAME = quizName.getText().toString();
                     QUIZ.MARK_ALLOC = quizMarkAlloc.getText().toString();
                     QUIZ.VISIBILITY = Integer.parseInt(quizVisibility.getText().toString());
+                    QUIZ.NUM_QUESTIONS = Integer.parseInt(quizNumQuestions.getText().toString().substring(0,1));
 
                     if(USER.STUDENT){
                         createNewAttemptDialog();
@@ -197,6 +198,13 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
                 }
                 else{
                     //view quiz feedback
+                    if (USER.attemptAnswers != null) {
+                        USER.attemptAnswers.clear();
+                    }
+                    else{
+                        USER.attemptAnswers = new HashMap<>();
+                    }
+                    //USER.QUIZ_SCORE = 0;
                     Intent intent = new Intent(context,QuizFeedback.class);
                     context.startActivity(intent);
                     dialog.dismiss();

@@ -41,6 +41,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -63,15 +66,16 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     private TextInputLayout answerOption3;
     private TextInputLayout answerOption4;
     private TextInputLayout markAlloc;
-    private  Button addQuestion;
+    private Button addQuestion;
     private ImageView quizEye;
     private Spinner spinner;
     private int correctAnswer;
 
     //for getting feedback
     private RequestQueue requestQueue;
-    String Answers = "";
-    String getAnswersURL="https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number=";
+    private String Answers = "";
+    private Set<String> questionsCovered = new HashSet<>();
+    private String getAnswersURL = "https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number=";
     int iterator = -1;
     int answer = 0;
 
@@ -81,7 +85,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public QuestionCardAdapter(ArrayList<QuestionV> questions, Context context) {
         super();
         //Getting all requests
-        this.questions= questions;
+        this.questions = questions;
         this.context = context;
     }
 
@@ -105,11 +109,12 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         final QuestionV question = questions.get(position);
         requestQueue = Volley.newRequestQueue(context);
-        getAnswers();
 
         String strContext = context.toString();
 
-        if(strContext.contains("QuizFeedback")){
+        if (strContext.contains("QuizFeedback")) {
+            int mark = question.getQuestionMarkAlloc();
+            boolean correctAnswer = false;
             ColorStateList colorStateList = new ColorStateList(
                     new int[][]
                             {
@@ -122,16 +127,6 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                                     Color.GREEN   // enabled
                             }
             );
-
-            holder.answerOption1.setClickable(false);
-            holder.answerOption2.setClickable(false);
-            holder.answerOption3.setClickable(false);
-            holder.answerOption4.setClickable(false);
-
-            holder.answerOption1.setChecked(false);
-            holder.answerOption2.setChecked(false);
-            holder.answerOption3.setChecked(false);
-            holder.answerOption4.setChecked(false);
 
             holder.question.setText(questions.get(position).getQuestionText());
             holder.answerOption1.setText(question.getAnswerOption1());
@@ -147,6 +142,51 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             String[] questNo = question.getQuestionID().split("-");
             holder.questionNo.setText(questNo[1] + ".");
 
+            holder.answerOption1.setClickable(false);
+            holder.answerOption2.setClickable(false);
+            holder.answerOption3.setClickable(false);
+            holder.answerOption4.setClickable(false);
+
+            /*
+            if (USER.attemptAnswers.get(questNo[1]).equals("1")) {
+                holder.answerOption1.setChecked(true);
+                holder.answerOption1.setEnabled(false);
+                holder.answerOption1.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                holder.answerOption1.setButtonTintList(colorStateList);
+                holder.answerOption2.setChecked(false);
+                holder.answerOption3.setChecked(false);
+                holder.answerOption4.setChecked(false);
+                holder.checkedID.setText("1");
+            } else if (USER.attemptAnswers.get(questNo[1]).equals("2")) {
+                holder.answerOption2.setChecked(true);
+                holder.answerOption2.setEnabled(false);
+                holder.answerOption2.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                holder.answerOption3.setButtonTintList(colorStateList);
+                holder.answerOption1.setChecked(false);
+                holder.answerOption3.setChecked(false);
+                holder.answerOption4.setChecked(false);
+                holder.checkedID.setText("2");
+            } else if (USER.attemptAnswers.get(questNo[1]).equals("3")) {
+                holder.answerOption3.setChecked(true);
+                holder.answerOption3.setEnabled(false);
+                holder.answerOption3.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                holder.answerOption3.setButtonTintList(colorStateList);
+                holder.answerOption1.setChecked(false);
+                holder.answerOption2.setChecked(false);
+                holder.answerOption4.setChecked(false);
+                holder.checkedID.setText("3");
+            } else {
+                holder.answerOption4.setChecked(true);
+                holder.answerOption4.setEnabled(false);
+                holder.answerOption4.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                holder.answerOption4.setButtonTintList(colorStateList);
+                holder.answerOption1.setChecked(false);
+                holder.answerOption2.setChecked(false);
+                holder.answerOption3.setChecked(false);
+                holder.checkedID.setText("4");
+            }
+
+             */
 
             /*iterator = iterator + Integer.parseInt(questNo[1]);
             answer = Character.getNumericValue(Answers.charAt(iterator));
@@ -154,29 +194,91 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 holder.answerOption1.setChecked(true);
             }*/
 
+            //Toast.makeText(context, Answers, Toast.LENGTH_SHORT).show();
+
             if (holder.answerOption1.getText().toString().equals(question.getCorrectOption())) {
+                if (USER.attemptAnswers.get(questNo[1]).equals("1")){
+                    holder.answerOption1.setChecked(true);
+                    holder.checkedID.setText("1");
+                    /*
+                    if (!questionsCovered.contains(question.getQuestionID())){
+                        Toast.makeText(context, "+"+mark, Toast.LENGTH_SHORT).show();
+                        questionsCovered.add(question.getQuestionID());
+                        USER.QUIZ_SCORE =  USER.QUIZ_SCORE + mark;
+                    }
+                     */
+                    correctAnswer = true;
+                }
                 holder.answerOption1.setButtonTintList(colorStateList);
-                holder.answerOption1.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
-                holder.checkedID.setText("1");
-            }
-            else if (holder.answerOption2.getText().toString().equals(question.getCorrectOption())) {
+            } else if (holder.answerOption2.getText().toString().equals(question.getCorrectOption())) {
+                if (USER.attemptAnswers.get(questNo[1]).equals("2")){
+                    holder.answerOption2.setChecked(true);
+                    holder.checkedID.setText("2");
+                    /*
+                    if (!questionsCovered.contains(question.getQuestionID())){
+                        Toast.makeText(context, "+"+mark, Toast.LENGTH_SHORT).show();
+                        questionsCovered.add(question.getQuestionID());
+                        USER.QUIZ_SCORE =  USER.QUIZ_SCORE + mark;
+                    }
+                     */
+                    correctAnswer = true;
+                }
                 holder.answerOption2.setButtonTintList(colorStateList);
-                holder.answerOption2.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
-                holder.checkedID.setText("2");
-            }
-            else if (holder.answerOption3.getText().toString().equals(question.getCorrectOption())) {
+            } else if (holder.answerOption3.getText().toString().equals(question.getCorrectOption())) {
+                if (USER.attemptAnswers.get(questNo[1]).equals("3")){
+                    holder.answerOption3.setChecked(true);
+                    holder.checkedID.setText("3");
+                    /*
+                    if (!questionsCovered.contains(question.getQuestionID())){
+                        Toast.makeText(context, "+"+mark, Toast.LENGTH_SHORT).show();
+                        questionsCovered.add(question.getQuestionID());
+                        USER.QUIZ_SCORE =  USER.QUIZ_SCORE + mark;
+                    }
+                     */
+                    correctAnswer = true;
+                }
                 holder.answerOption3.setButtonTintList(colorStateList);
-                holder.answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
-                holder.checkedID.setText("3");
-            }
-            else {
+            } else {
+                if (USER.attemptAnswers.get(questNo[1]).equals("4")){
+                    holder.answerOption4.setChecked(true);
+                    holder.checkedID.setText("4");
+                    /*
+                    if (!questionsCovered.contains(question.getQuestionID())){
+                        Toast.makeText(context, "+"+mark, Toast.LENGTH_SHORT).show();
+                        questionsCovered.add(question.getQuestionID());
+                        USER.QUIZ_SCORE =  USER.QUIZ_SCORE + mark;
+                    }
+                     */
+                    correctAnswer = true;
+                }
                 holder.answerOption4.setButtonTintList(colorStateList);
-                holder.answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
-                holder.checkedID.setText("4");
             }
 
-        }
-        else if (!USER.STUDENT) {
+            if (!correctAnswer){
+                if (USER.attemptAnswers.get(questNo[1]).equals("1")) {
+                    holder.answerOption1.setChecked(true);
+                    holder.answerOption1.setEnabled(false);
+                    holder.answerOption1.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                    holder.answerOption1.setButtonTintList(colorStateList);
+                } else if (USER.attemptAnswers.get(questNo[1]).equals("2")) {
+                    holder.answerOption2.setChecked(true);
+                    holder.answerOption2.setEnabled(false);
+                    holder.answerOption2.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                    holder.answerOption2.setButtonTintList(colorStateList);
+                } else if (USER.attemptAnswers.get(questNo[1]).equals("3")) {
+                    holder.answerOption3.setChecked(true);
+                    holder.answerOption3.setEnabled(false);
+                    holder.answerOption3.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                    holder.answerOption3.setButtonTintList(colorStateList);
+                } else if (USER.attemptAnswers.get(questNo[1]).equals("4")) {
+                    holder.answerOption4.setChecked(true);
+                    holder.answerOption4.setEnabled(false);
+                    holder.answerOption4.setTextColor(ContextCompat.getColor(context, android.R.color.black));
+                    holder.answerOption4.setButtonTintList(colorStateList);
+                }
+            }
+
+        } else if (!USER.STUDENT) {
 
             holder.question.setText(questions.get(position).getQuestionText());
             holder.answerOption1.setText(question.getAnswerOption1());
@@ -208,7 +310,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         }
         else {
             holder.question.setText(questions.get(position).getQuestionText());
-            holder.answerOption1.setText(question.getAnswerOption2());
+            holder.answerOption1.setText(question.getAnswerOption1());
             holder.answer1ID.setText(Integer.toString(question.getAnswerOption1ID()));
             holder.answerOption2.setText(question.getAnswerOption2());
             holder.answer2ID.setText(Integer.toString(question.getAnswerOption2ID()));
@@ -254,7 +356,8 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public int getItemCount() {
         return questions.size();
     }
-    public ArrayList<QuestionV> getAll(){
+
+    public ArrayList<QuestionV> getAll() {
         return questions;
     }
 
@@ -297,82 +400,86 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             answer4ID = (TextView) itemView.findViewById(R.id.Answer4ID);
 
             //disable radio buttons if an instructor
-            if (!USER.STUDENT){
+            if (!USER.STUDENT) {
                 answerOption1.setEnabled(false);
-                answerOption1.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption1.setTextColor(ContextCompat.getColor(context, android.R.color.black));
                 answerOption2.setEnabled(false);
-                answerOption2.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption2.setTextColor(ContextCompat.getColor(context, android.R.color.black));
                 answerOption3.setEnabled(false);
-                answerOption3.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption3.setTextColor(ContextCompat.getColor(context, android.R.color.black));
                 answerOption4.setEnabled(false);
-                answerOption4.setTextColor(ContextCompat.getColor(context,android.R.color.black));
+                answerOption4.setTextColor(ContextCompat.getColor(context, android.R.color.black));
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 @Generated
                 public void onClick(View v) {
-                    if (QUIZ.VISIBILITY == 0){
+                    if (QUIZ.VISIBILITY == 0) {
                         String ansNum = checkedID.getText().toString();
                         String a1ID = answer1ID.getText().toString();
                         String a2ID = answer2ID.getText().toString();
                         String a3ID = answer3ID.getText().toString();
                         String a4ID = answer4ID.getText().toString();
-                        createNewQuestionDialog(answerOption1,answerOption2,answerOption3,answerOption4,question,
-                                questionMarks,questionNo,ansNum,a1ID,a2ID,a3ID,a4ID);
+                        createNewQuestionDialog(answerOption1, answerOption2, answerOption3, answerOption4, question,
+                                questionMarks, questionNo, ansNum, a1ID, a2ID, a3ID, a4ID);
                     }
 
                 }
             });
-            answerOption1.setOnClickListener( new View.OnClickListener() {
+            answerOption1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    for(QuestionV Quest:questions ){
-                        if(Quest.getQuestionText().equals( question.getText() )){
+                    for (QuestionV Quest : questions) {
+                        if (Quest.getQuestionText().equals(question.getText())) {
                             Quest.setSelcted_ans("1");
-                            answerOption1.setChecked( true );
-                            Quest.setOpt1_selected( true );
+                            Quest.setSelectedAnsText(answerOption1.getText().toString());
+                            answerOption1.setChecked(true);
+                            Quest.setOpt1_selected(true);
                         }
                     }
 
                 }
-            } );
-            answerOption2.setOnClickListener( new View.OnClickListener() {
+            });
+            answerOption2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    for(QuestionV Quest:questions ){
-                        if(Quest.getQuestionText().equals( question.getText() )){
+                    for (QuestionV Quest : questions) {
+                        if (Quest.getQuestionText().equals(question.getText())) {
                             Quest.setSelcted_ans("2");
-                            answerOption2.setChecked( true );
-                            Quest.setOpt2_selected( true );
+                            Quest.setSelectedAnsText(answerOption2.getText().toString());
+                            answerOption2.setChecked(true);
+                            Quest.setOpt2_selected(true);
                         }
                     }
                 }
-            } );
-            answerOption3.setOnClickListener( new View.OnClickListener() {
+            });
+            answerOption3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    for(QuestionV Quest:questions ){
-                        if(Quest.getQuestionText().equals( question.getText() )){
+                    for (QuestionV Quest : questions) {
+                        if (Quest.getQuestionText().equals(question.getText())) {
                             Quest.setSelcted_ans("3");
-                            answerOption3.setChecked( true );
-                            Quest.setOpt3_selected( true );
+                            Quest.setSelectedAnsText(answerOption3.getText().toString());
+                            answerOption3.setChecked(true);
+                            Quest.setOpt3_selected(true);
                         }
                     }
                 }
-            } );
-            answerOption4.setOnClickListener( new View.OnClickListener() {
+            });
+            answerOption4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    for(QuestionV Quest:questions ){
-                        if(Quest.getQuestionText().equals( question.getText() )){
+                    for (QuestionV Quest : questions) {
+                        if (Quest.getQuestionText().equals(question.getText())) {
                             Quest.setSelcted_ans("4");
-                            answerOption4.setChecked( true );
-                            Quest.setOpt4_selected( true );
+                            Quest.setSelectedAnsText(answerOption4.getText().toString());
+                            answerOption4.setChecked(true);
+                            Quest.setOpt4_selected(true);
                         }
                     }
                 }
-            } );
+            });
 
 
         }
@@ -382,12 +489,13 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         return position;
     }
 
-    public ArrayList<QuestionV> getSelected(){
+    public ArrayList<QuestionV> getSelected() {
         ArrayList<QuestionV> selected = new ArrayList<>();
         return selected;
     }
+
     @Generated
-    public void createNewQuestionDialog(RadioButton answer1, RadioButton answer2,RadioButton answer3,RadioButton answer4, TextView questionText,
+    public void createNewQuestionDialog(RadioButton answer1, RadioButton answer2, RadioButton answer3, RadioButton answer4, TextView questionText,
                                         TextView questionMarks, TextView questionNo, String correctAns, String a1ID, String a2ID,
                                         String a3ID, String a4ID) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
@@ -404,11 +512,11 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         String ans4 = answer4.getText().toString();
         String qtext = questionText.getText().toString();
         String qmark = questionMarks.getText().toString();
-        String mark = qmark.substring(1,qmark.length()-1);
-        String qnum =questionNo.getText().toString();
-        String qno = qnum.substring(0,qnum.length()-1);
+        String mark = qmark.substring(1, qmark.length() - 1);
+        String qnum = questionNo.getText().toString();
+        String qno = qnum.substring(0, qnum.length() - 1);
         int correctAnsNum = Integer.parseInt(correctAns);
-        String answerOptions[] ={"Select answer","Answer option 1","Answer option 2","Answer option 3"," Answer option 4"};
+        String answerOptions[] = {"Select answer", "Answer option 1", "Answer option 2", "Answer option 3", " Answer option 4"};
 
         dialogUpdateQuestion = (Button) viewPopUp.findViewById(R.id.dialogAddQuestion);
         dialogUpdateQuestion.setText("Update");
@@ -424,20 +532,17 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         answerOption4.getEditText().setText(ans4);
         markAlloc = (TextInputLayout) viewPopUp.findViewById(R.id.dialogMarkAlloc);
         markAlloc.getEditText().setText(mark);
-        spinner = (Spinner)viewPopUp.findViewById(R.id.spCorrectAnswer);
+        spinner = (Spinner) viewPopUp.findViewById(R.id.spCorrectAnswer);
         cancel = (Button) viewPopUp.findViewById(R.id.cancelAddQuestion);
-        ArrayAdapter<String> adapter = new ArrayAdapter(context,android.R.layout.simple_spinner_item,answerOptions){
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, answerOptions) {
 
             @Override
             @Generated
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
+            public boolean isEnabled(int position) {
+                if (position == 0) {
                     //Disable the first item of spinner.
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
             }
@@ -453,11 +558,12 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     textview.setTextColor(Color.BLACK);
                 }
                 return view;
-            }};
+            }
+        };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         correctAnswer = correctAnsNum;
-        spinner.setSelection(correctAnsNum,false);
+        spinner.setSelection(correctAnsNum, false);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             @Generated
@@ -482,7 +588,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                 isEmpty(answerOption3);
                 isEmpty(answerOption4);
                 invalidMark(markAlloc);
-                if(!isEmpty(question) && !isEmpty(answerOption1)&& !isEmpty(answerOption2)&&!isEmpty(answerOption3)&&!isEmpty(answerOption4) && !invalidMark(markAlloc)){
+                if (!isEmpty(question) && !isEmpty(answerOption1) && !isEmpty(answerOption2) && !isEmpty(answerOption3) && !isEmpty(answerOption4) && !invalidMark(markAlloc)) {
                     String quest = question.getEditText().getText().toString();
                     String ans1 = answerOption1.getEditText().getText().toString();
                     String ans2 = answerOption2.getEditText().getText().toString();
@@ -493,7 +599,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     try {
                         // Toast.makeText(context,QUIZ.ID+"-"+qnum, Toast.LENGTH_LONG).show();
                         //  Toast.makeText(context,QUIZ.ID+"-"+qno, Toast.LENGTH_LONG).show();
-                        updateQuestion("updateQuestion.php",quest,ans1,ans2,ans3,ans4,correctAnswer,mark,qno,a1ID,a2ID,a3ID,a4ID);
+                        updateQuestion("updateQuestion.php", quest, ans1, ans2, ans3, ans4, correctAnswer, mark, qno, a1ID, a2ID, a3ID, a4ID);
                         dialog.dismiss();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -513,23 +619,23 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     }
 
     @Generated
-    private void updateQuestion (String phpFile,String question,String answer1,String answer2,String answer3,String answer4, int answerCorrect,
-                                 String mark, String qno, String a1ID, String a2ID, String a3ID,String a4ID) throws IOException {
+    private void updateQuestion(String phpFile, String question, String answer1, String answer2, String answer3, String answer4, int answerCorrect,
+                                String mark, String qno, String a1ID, String a2ID, String a3ID, String a4ID) throws IOException {
         OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://lamp.ms.wits.ac.za/~s2105624/" + phpFile).newBuilder();
         urlBuilder.addQueryParameter("quizId", Integer.toString(QUIZ.ID));
         urlBuilder.addQueryParameter("questMark", mark);
-        urlBuilder.addQueryParameter("questId", QUIZ.ID+"-"+qno);
+        urlBuilder.addQueryParameter("questId", QUIZ.ID + "-" + qno);
         urlBuilder.addQueryParameter("text", question);
-        urlBuilder.addQueryParameter("option1",answer1);
-        urlBuilder.addQueryParameter("option2",answer2);
-        urlBuilder.addQueryParameter("option3",answer3);
-        urlBuilder.addQueryParameter("option4",answer4);
-        urlBuilder.addQueryParameter("option1Id",a1ID);
-        urlBuilder.addQueryParameter("option2Id",a2ID);
-        urlBuilder.addQueryParameter("option3Id",a3ID);
-        urlBuilder.addQueryParameter("option4Id",a4ID);
-        urlBuilder.addQueryParameter("correctAnswer",Integer.toString(answerCorrect));
+        urlBuilder.addQueryParameter("option1", answer1);
+        urlBuilder.addQueryParameter("option2", answer2);
+        urlBuilder.addQueryParameter("option3", answer3);
+        urlBuilder.addQueryParameter("option4", answer4);
+        urlBuilder.addQueryParameter("option1Id", a1ID);
+        urlBuilder.addQueryParameter("option2Id", a2ID);
+        urlBuilder.addQueryParameter("option3Id", a3ID);
+        urlBuilder.addQueryParameter("option4Id", a4ID);
+        urlBuilder.addQueryParameter("correctAnswer", Integer.toString(answerCorrect));
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -553,15 +659,14 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
                     @Override
                     @Generated
                     public void run() {
-                        Log.d("HERE",responseData.toString());
-                        if(responseData.trim().equals("Successful")) {
-                            Toast toast = Toast.makeText(context,"Successful", Toast.LENGTH_LONG);
+                        Log.d("HERE", responseData.toString());
+                        if (responseData.trim().equals("Successful")) {
+                            Toast toast = Toast.makeText(context, "Successful", Toast.LENGTH_LONG);
                             toast.show();
                             Intent intent = new Intent(context, BrowseQuizQuestions.class);
                             cont.startActivity(intent);
                             cont.finish();
-                        }
-                        else{
+                        } else {
                             Toast toast = Toast.makeText(context, "Couldn't update your question ", Toast.LENGTH_LONG);
                             toast.show();
                         }
@@ -590,8 +695,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         if (mark.isEmpty()) {
             text.setError("Field can't be empty");
             invalid = true;
-        }
-        else {
+        } else {
             int m = Integer.parseInt(mark);
             if (m == 0) {
                 text.setError("Mark must be greater than 0");
@@ -601,47 +705,4 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         return invalid;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    @Generated
-    private void getAnswers() {
-        //Adding the method to the queue by calling the method getTagData
-        requestQueue.add(getAnswersFromServer());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    @Generated
-    private JsonArrayRequest getAnswersFromServer() {
-        //JsonArrayRequest of volley
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getAnswersURL + USER.USER_NUM + "&quizID=" + QUIZ.ID,
-                (response) -> {
-                    //Calling method parseData to parse the json response
-                    parseAnswerData(response);
-                    //Hiding the progressBar
-                },
-                (error) -> {
-                    //If an error occurs that means user was not found or does not exist
-                    Toast.makeText(context, "Student's answers were not found", Toast.LENGTH_SHORT).show();
-                });
-        //Returning the request
-        return jsonArrayRequest;
-    }
-
-    //This method will parse json Data
-    @Generated
-    private void parseAnswerData(JSONArray array) {
-        for (int i = 0; i < array.length(); i++) {
-
-            JSONObject json = null;
-            try {
-                //Getting json
-                json = array.getJSONObject(i);
-
-                //getting Answers from Quiz Attempts
-                Answers = json.getString("Attempt_Answers");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

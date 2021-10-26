@@ -1,5 +1,6 @@
 package com.example.witsonline;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.core.content.ContextCompat;
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -41,27 +44,33 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
     private QuestionCardAdapter adapter;
     private ArrayList<QuestionV> listQuestions;
 
-    String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
+    private String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
+
+    private String Answers = "";
+    String getAnswersURL = "https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_feedback);
 
+        requestQueue = Volley.newRequestQueue(this);
+
+        getAnswers();
+
+
         QuizTopic = (TextView)findViewById( R.id.quiz_feedback_topic);
         QuizScore = (TextView)findViewById( R.id.marks);
 
-        //setting marks
-        QuizScore.setText("x out of " + QUIZ.MARK_ALLOC);
+        //QuizScore.setText("x out of " + QUIZ.MARK_ALLOC);
 
         recyclerView = (RecyclerView) findViewById(R.id.feedbackRecyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        requestQueue = Volley.newRequestQueue(this);
 
         listQuestions = new ArrayList<>();
-        getData();
+        //getData();
 
         recyclerView.setOnScrollChangeListener(this);
 
@@ -100,6 +109,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
                     //Hiding the progressBar
                     progressBar.setVisibility(View.GONE);
 
@@ -139,6 +149,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
                 question.setAnswerOption2(json.getString("2"));
                 question.setAnswerOption3(json.getString("4"));
                 question.setAnswerOption4(json.getString("6"));
+                question.setCorrectOption(json.getString("8"));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -146,7 +157,67 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
             listQuestions.add(question);
             adapter.notifyDataSetChanged();
         }
+
     }
+
+    @Generated
+    private void getAnswers() {
+        //Adding the method to the queue by calling the method getTagData
+        requestQueue.add(getAnswersFromServer());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    @Generated
+    private JsonArrayRequest getAnswersFromServer() {
+        //JsonArrayRequest of volley
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(getAnswersURL + USER.USER_NUM + "&quizID=" + QUIZ.ID,
+                (response) -> {
+                    //Calling method parseData to parse the json response
+                    parseAnswerData(response);
+                    //Hiding the progressBar
+                },
+                (error) -> {
+                    //If an error occurs that means user was not found or does not exist
+                    Toast.makeText(QuizFeedback.this, "Student's answers were not found", Toast.LENGTH_SHORT).show();
+                });
+        //Returning the request
+        return jsonArrayRequest;
+    }
+
+    //This method will parse json Data
+    @Generated
+    private void parseAnswerData(JSONArray array) {
+        for (int i = 0; i < array.length(); i++) {
+
+            JSONObject json = null;
+            try {
+                //Getting json
+                json = array.getJSONObject(i);
+
+                //getting Answers from Quiz Attempts
+                Answers = json.getString("Attempt_Answers");
+                String mark = json.getString("Attempt_Mark");
+                getQuizAttempt();
+
+                //setting marks
+                QuizScore.setVisibility(View.VISIBLE);
+                QuizScore.setText(mark+" out of " + QUIZ.MARK_ALLOC);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void getQuizAttempt(){
+        String[] parts = Answers.split(";");
+        //Toast.makeText(QuizFeedback.this,parts.length, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < QUIZ.NUM_QUESTIONS;i++){
+            USER.attemptAnswers.put(Integer.toString(i+1),parts[i]);
+        }
+        getData();
+    }
+
     //This method will check if the recyclerview has reached the bottom or not
     public boolean isLastItemDistplaying(RecyclerView recyclerView) {
         if (recyclerView.getAdapter().getItemCount() != 0) {
@@ -165,4 +236,5 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
             getData();
         }
     }
+
 }

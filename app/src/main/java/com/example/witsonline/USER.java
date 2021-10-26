@@ -27,4 +27,8 @@ public class USER {
 	public static String regUser = "";
 	public static String regPass = "";
 	public static boolean regStudent = true;
+
+	//quiz feedback
+	public static HashMap<String,String> attemptAnswers;
+	//public static int QUIZ_SCORE = 0;
 }

@@ -118,6 +118,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
     private void SubmitQuiz(ArrayList<QuestionV> listQuestions) {
         String AnswerStr = "";
+        int mark = 0;
 
         int Verify = 0;
         long s;
@@ -125,17 +126,34 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         ArrayList<QuestionV> Quest = adapter.getAll();
         for(int i = 0; i<Quest.size();i++){
             if(i == Quest.size()-1){
-                AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans();
+
                 if(!(Quest.get(i).getSelcted_ans()).equals("")){
                     Verify++;
+                    AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans();
+                }
+                else{
+                    AnswerStr = AnswerStr + "-1";
+                }
+
+                //check if answer was correct
+                if(Quest.get(i).getSelectedAnswerText().trim().equals(Quest.get(i).getCorrectOption().trim())){
+                    mark = mark + Quest.get(i).getQuestionMarkAlloc();
                 }
 
 
             }
             else{
-                AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans()+";";
                 if(!(Quest.get(i).getSelcted_ans()).equals("")){
                     Verify++;
+                    AnswerStr = AnswerStr + Quest.get( i ).getSelcted_ans()+";";
+                }
+                else{
+                    AnswerStr = AnswerStr +"-1;";
+                }
+
+                //check if answer was correct
+                if(Quest.get(i).getSelectedAnswerText().trim().equals(Quest.get(i).getCorrectOption().trim())){
+                    mark = mark + Quest.get(i).getQuestionMarkAlloc();
                 }
             }
         }
@@ -143,14 +161,14 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         if(Verify != Quest.size()){
             X = false;
         }
-        createSubmitDialog(X, AnswerStr);
+        createSubmitDialog(X, AnswerStr, mark);
 
 
 
 
     }
 
-    private void createSubmitDialog(boolean V,String answerStr) {
+    private void createSubmitDialog(boolean V,String answerStr, int mark) {
         dialogBuilder = new AlertDialog.Builder(this);
         final View viewPopUp = LayoutInflater.from(this)
                 .inflate(R.layout.dialog_submit_quiz_student, null);
@@ -172,7 +190,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         dlg_btn_yes.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendAnswers(answerStr);
+                sendAnswers(answerStr,mark);
                 dialog.dismiss();
                 QuizSubmitedDialog();
             }
@@ -206,7 +224,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         } );
     }
 
-    private void sendAnswers(String Answer) {
+    private void sendAnswers(String Answer, int mark) {
 
         OkHttpClient client = new OkHttpClient();
 
@@ -214,6 +232,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         urlBuilder.addQueryParameter("attemptQuiz", Integer.toString(QUIZ.ID));
         urlBuilder.addQueryParameter("attemptStudent", USER.USERNAME);
         urlBuilder.addQueryParameter("attemptAnswers", Answer);
+        urlBuilder.addQueryParameter("attemptMark", Integer.toString(mark));
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()

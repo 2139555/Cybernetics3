@@ -19,6 +19,7 @@ public class QuestionV{
     boolean opt3_selected = false;
     boolean opt4_selected = false;
     private String Selected_ans = "";
+    private String selectedAnswerText = "";
 
     public boolean isOpt1_selected() {
         return opt1_selected;
@@ -62,6 +63,10 @@ public class QuestionV{
     public void setSelcted_ans(String selcted_ans) {
         Selected_ans = selcted_ans;
     }
+
+
+    public void setSelectedAnsText(String ans) {selectedAnswerText = ans;}
+    public String getSelectedAnswerText() { return selectedAnswerText; }
 
 
 

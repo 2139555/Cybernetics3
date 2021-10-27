@@ -884,7 +884,7 @@ public class CourseHomePage extends AppCompatActivity implements  View.OnScrollC
                                     //toast.show();
                                 }
                                 else if(requestPermissionState == 0){
-                                    Toast.makeText( CourseHomePage.this,"Permission is off!" , Toast.LENGTH_SHORT ).show();
+                                    //Toast.makeText( CourseHomePage.this,"Permission is off!" , Toast.LENGTH_SHORT ).show();
                                 }
 
 

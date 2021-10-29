@@ -88,6 +88,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         quizEye = findViewById(R.id.editQuizVisibility);
         if (QUIZ.VISIBILITY == 1){
             quizEye.setImageResource(R.drawable.ic_baseline_visibility_24);
+            addQuestion.setVisibility(View.GONE);
         }
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -393,6 +394,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
             public void onClick(View v) {
                 if (QUIZ.VISIBILITY == 0){
                     quizEye.setImageResource(R.drawable.ic_baseline_visibility_24);
+                    addQuestion.setVisibility(View.GONE);
                     QUIZ.VISIBILITY = 1;
                     try {
                         setQuizVisibility("updateQuizVisibility.php");
@@ -402,6 +404,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
                 }
                 else if (visibilityText.getText().toString().trim().equals("Do you want to hide this quiz?")){
                     quizEye.setImageResource(R.drawable.ic_baseline_visibility_off_24);
+                    addQuestion.setVisibility(View.VISIBLE);
                     QUIZ.VISIBILITY =0;
                     try {
                         setQuizVisibility("updateQuizVisibility.php");

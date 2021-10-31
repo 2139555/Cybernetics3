@@ -2,7 +2,7 @@ package com.example.witsonline;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Generated
 public class QUIZ {
     public static int ID;
     public static String NAME;

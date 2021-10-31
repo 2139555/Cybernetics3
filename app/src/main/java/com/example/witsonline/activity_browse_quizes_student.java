@@ -45,6 +45,7 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
 
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/getQuizes_student.php?";
     @Override
+    @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_browse_quizes_student );
@@ -85,7 +86,7 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
     }
 
 
-
+    @Generated
     private void parseData(String array) throws JSONException {
         JSONObject json = new JSONObject(array);
         JSONArray jsonArray = json.getJSONArray( "myArr" );
@@ -124,9 +125,11 @@ public class activity_browse_quizes_student extends AppCompatActivity implements
     }
 
     @Override
+    @Generated
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
     }
+    @Generated
     private void getDataFromServer() {
 
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.quizProgressBar_st);

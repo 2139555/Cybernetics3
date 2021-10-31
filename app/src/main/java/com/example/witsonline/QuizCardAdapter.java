@@ -271,6 +271,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
             }
         });
     }
+    @Generated
     public void editQuizDialog() {
         androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
         final View viewPopUp = LayoutInflater.from(context)
@@ -307,12 +308,13 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
     }
-
+    @Generated
     public void editViewQuizDialog() {
         androidx.appcompat.app.AlertDialog.Builder dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(context);
         final View viewPopUp = LayoutInflater.from(context)
@@ -336,6 +338,7 @@ public class QuizCardAdapter extends RecyclerView.Adapter<QuizCardAdapter.ViewHo
 
         dialogViewQuiz.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 Intent i = new Intent(context,BrowseQuizQuestions.class);
                 context.startActivity(i);

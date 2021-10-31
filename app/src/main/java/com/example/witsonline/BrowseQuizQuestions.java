@@ -78,6 +78,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
     String webURL = "https://lamp.ms.wits.ac.za/home/s2105624/questionFeed.php?page=";
     String ansURL = "https://lamp.ms.wits.ac.za/home/s2105624/answerFeed.php?page=";
     @Override
+    @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_quiz_questions);
@@ -112,6 +113,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         addQuestion.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 createNewQuestionDialog();
             }
@@ -119,6 +121,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         quizEye.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 createNewVisibilityDialog();
             }
@@ -303,6 +306,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 dialog.dismiss();
             }
@@ -418,6 +422,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
 
         dialogVisibilityNo.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 dialog.dismiss();
             }
@@ -531,7 +536,7 @@ public class BrowseQuizQuestions extends AppCompatActivity implements View.OnScr
         }
         return invalid;
     }
-
+    @Generated
     public boolean noAnswerSelected() {
         if (!correctAnswerSelected) {
             Toast.makeText(BrowseQuizQuestions.this,"Select a correct answer", Toast.LENGTH_LONG).show();

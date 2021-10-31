@@ -652,6 +652,7 @@ public class CourseCardAdapter extends RecyclerView.Adapter<CourseCardAdapter.Vi
         }
 
     }
+    @Generated
     private void checkIfPermissionGranted() throws IOException {
         OkHttpClient client = new OkHttpClient();
 

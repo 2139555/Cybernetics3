@@ -59,6 +59,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
     private RecyclerView.ViewHolder holder;
 
     @Override
+    @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_attempt_quiz );
@@ -89,6 +90,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 SubmitQuiz(listQuestions);
             }
@@ -96,7 +98,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
 
     }
-
+    @Generated
     private void showWarningDialog() {
         AlertDialog.Builder DialogBuilder = new AlertDialog.Builder(this);
         final View viewPopUp = LayoutInflater.from(this)
@@ -108,6 +110,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         DialoG.show();
         dlg_btn_ok.setOnClickListener( new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 DialoG.dismiss();
             }
@@ -115,7 +118,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
 
     }
-
+    @Generated
     private void SubmitQuiz(ArrayList<QuestionV> listQuestions) {
         String AnswerStr = "";
         int mark = 0;
@@ -167,7 +170,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
 
     }
-
+    @Generated
     private void createSubmitDialog(boolean V,String answerStr, int mark) {
         dialogBuilder = new AlertDialog.Builder(this);
         final View viewPopUp = LayoutInflater.from(this)
@@ -189,6 +192,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         dialog.show();
         dlg_btn_yes.setOnClickListener( new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 sendAnswers(answerStr,mark);
                 dialog.dismiss();
@@ -197,6 +201,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         } );
         dlg_btn_no.setOnClickListener( new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
 
                 dialog.dismiss();
@@ -204,7 +209,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         } );
 
     }
-
+    @Generated
     private void QuizSubmitedDialog() {
         AlertDialog.Builder DialogBuilder = new AlertDialog.Builder(this);
         final View viewPopUp = LayoutInflater.from(this)
@@ -217,13 +222,14 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
 
         dlg_btn_ok.setOnClickListener( new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(),activity_browse_quizes_student.class);
                 startActivity( i );
             }
         } );
     }
-
+    @Generated
     private void sendAnswers(String Answer, int mark) {
 
         OkHttpClient client = new OkHttpClient();
@@ -253,6 +259,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
                 if(response.isSuccessful()){
                     activity_attempt_quiz.this.runOnUiThread( new Runnable() {
                         @Override
+                        @Generated
                         public void run() {
 
                         }
@@ -273,7 +280,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
         //Incrementing the course counter
         questionCount++;
     }
-
+    @Generated
     private JsonArrayRequest getDataFromServer(int requestCount){
         //Initializing progressbar
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.questionProgressBar_AttemptQuiz);
@@ -358,6 +365,7 @@ public class activity_attempt_quiz extends AppCompatActivity implements View.OnS
     }
 
     @Override
+    @Generated
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
 

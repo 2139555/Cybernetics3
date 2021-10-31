@@ -328,6 +328,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
             holder.rgAnswerOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
+                @Generated
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     int radioButtonID = group.getCheckedRadioButtonId();
                     View radioButton = group.findViewById(radioButtonID);
@@ -356,7 +357,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
     public int getItemCount() {
         return questions.size();
     }
-
+    @Generated
     public ArrayList<QuestionV> getAll() {
         return questions;
     }
@@ -429,6 +430,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             });
             answerOption1.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @Generated
                 public void onClick(View v) {
                     for (QuestionV Quest : questions) {
                         if (Quest.getQuestionText().equals(question.getText())) {
@@ -443,6 +445,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             });
             answerOption2.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @Generated
                 public void onClick(View v) {
                     for (QuestionV Quest : questions) {
                         if (Quest.getQuestionText().equals(question.getText())) {
@@ -456,6 +459,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             });
             answerOption3.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @Generated
                 public void onClick(View v) {
                     for (QuestionV Quest : questions) {
                         if (Quest.getQuestionText().equals(question.getText())) {
@@ -469,6 +473,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
             });
             answerOption4.setOnClickListener(new View.OnClickListener() {
                 @Override
+                @Generated
                 public void onClick(View v) {
                     for (QuestionV Quest : questions) {
                         if (Quest.getQuestionText().equals(question.getText())) {
@@ -484,11 +489,11 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         }
     }
-
+    @Generated
     public int getItemViewType(int position) {
         return position;
     }
-
+    @Generated
     public ArrayList<QuestionV> getSelected() {
         ArrayList<QuestionV> selected = new ArrayList<>();
         return selected;
@@ -612,6 +617,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
+            @Generated
             public void onClick(View v) {
                 dialog.dismiss();
             }
@@ -676,7 +682,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
         });
     }
 
-
+    @Generated
     public boolean isEmpty(TextInputLayout text) {
         boolean empty = false;
         text.setError(null);
@@ -687,7 +693,7 @@ public class QuestionCardAdapter extends RecyclerView.Adapter<QuestionCardAdapte
 
         return empty;
     }
-
+    @Generated
     public boolean invalidMark(TextInputLayout text) {
         boolean invalid = false;
         text.setError(null);

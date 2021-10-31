@@ -69,6 +69,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnScrollChan
     private ArrayList<QuizV> listQuizVs;
 
     @Override
+    @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);

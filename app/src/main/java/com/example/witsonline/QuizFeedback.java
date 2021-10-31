@@ -50,6 +50,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
     String getAnswersURL = "https://lamp.ms.wits.ac.za/home/s2105624/QuizFeedback.php?Student_Number=";
 
     @Override
+    @Generated
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_feedback);
@@ -91,7 +92,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
         //Incrementing the course counter
         questionCount++;
     }
-
+    @Generated
     private JsonArrayRequest getDataFromServer(int requestCount){
         //Initializing progressbar
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.quizFeedbackProgressBar);
@@ -208,7 +209,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
             }
         }
     }
-
+    @Generated
     public void getQuizAttempt(){
         String[] parts = Answers.split(";");
         //Toast.makeText(QuizFeedback.this,parts.length, Toast.LENGTH_SHORT).show();
@@ -230,6 +231,7 @@ public class QuizFeedback extends AppCompatActivity implements View.OnScrollChan
     }
 
     @Override
+    @Generated
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
         if (isLastItemDistplaying(recyclerView)) {
             //Calling the method getData again
